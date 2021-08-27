@@ -1,7 +1,6 @@
 {
   "name": "porta",
   "version": "1.0.0",
-  "description": "",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,6 +21,9 @@
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
-    "three": "^0.132.0"
-  }
+    "three": "^0.132.0",
+    "webpack-dev-server": "^4.0.0"
+  },
+  "main": "webpack.config.js",
+  "description": ""
 }

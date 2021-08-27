@@ -1,15 +1,15 @@
 
 tasks:
   - name: npmstart
-    command: npm init -y
+    command: npm init -y && exit
   - name: webpackstrat
-    command: npm install webpack webpack-cli --save-dev
+    command: npm install webpack webpack-cli webpack-dev-server --save-dev && exit
   - name: installtree
-    command: npm install 
+    command: npm install && exit
   - name: webpackcopile
-    command: npx webpack
-  - name: apachestartServer
-    command: apachectl start
+    command: npx webpack 
+  - name: webpacstartServer
+    command: apachectl start && exit
   # - name: DB Server
     # command: sh ./scripts/start-db.sh
     # openMode: split-right
