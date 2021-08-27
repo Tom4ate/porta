@@ -1,0 +1,15 @@
+
+tasks:
+  - name: npmstart
+    command: npm init -y
+  - name: webpackstrat
+    command: npm install webpack webpack-cli --save-dev
+  - name: installtree
+    command: npm install 
+  - name: webpackcopile
+    command: npx webpack
+  - name: apachestartServer
+    command: apachectl start
+  # - name: DB Server
+    # command: sh ./scripts/start-db.sh
+    # openMode: split-right
