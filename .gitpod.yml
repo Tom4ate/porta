@@ -7,9 +7,9 @@ tasks:
   - name: installtree
     command: npm install && exit
   - name: webpackcopile
-    command: npx webpack 
+    command: npx webpack && exit
   - name: webpacstartServer
-    command: apachectl start && exit
+    command: npx webpack server 
   # - name: DB Server
     # command: sh ./scripts/start-db.sh
     # openMode: split-right

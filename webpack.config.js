@@ -2,6 +2,9 @@ const path = require('path');
 
 module.exports = {
 //   entry: './src/index.js',
+  optimization: {
+    minimize: false
+  },
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'main.js',
@@ -12,8 +15,13 @@ module.exports = {
     },
     compress: true,
     port: 9000,
-    allowedHosts: [
-      "all"
-    ]
+    allowedHosts: 'all',
   },
+  // module: {
+  //   rules: [
+  //     {
+  //        use: 'app.js' 
+  //     }
+  //   ],
+  // },
 };
