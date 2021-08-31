@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import CameraController from './camera';
 
 export default class App {
 
@@ -15,8 +16,13 @@ export default class App {
         
         console.log("iniciamos o app.",this);
 
-        this.setupControl();
         this.createScene();
+
+        var cameraControl = new CameraController( this );
+        cameraControl.setMode("orbit");
+        // cameraControl.setMode("keysControl");
+        cameraControl.setPosition(0,1,5);
+
         let box1 = this.addBox(0.2,0.2,0.2,0,0,0);
 
         for (let index = 1; index <= 10; index++) {
@@ -32,6 +38,8 @@ export default class App {
     }
 
     setupControl() {
+        console.log(CameraController);
+        
         // inicia os movimentos da camera 
         let cMov = (index,incrice) => {
             let speed = 0.1;
@@ -105,7 +113,7 @@ export default class App {
         this.camera.position.z = zPos;
 
         this.scene = new THREE.Scene();
-
+        this.scene.background = new THREE.Color( 0xcccccc );
         this.renderer = new THREE.WebGLRenderer( { antialias: true } );
         this.renderer.setSize( window.innerWidth, window.innerHeight );
         
