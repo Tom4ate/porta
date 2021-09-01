@@ -11,18 +11,19 @@ export default class CameraControl {
         this.camera = app.camera;
         this.render = app.render;
         this.mode = "none";
+        this.speed = 0.1;
     }
 
     setupControl() {
         // inicia os movimentos da camera 
         let cMov = (index,incrice) => {
-            let speed = 0.1;
+            this.speed = 0.1;
             let value = this.camera.position[index] ; 
 
             if(incrice) {
-                value = value + speed;
+                value = value + this.speed;
             } else {
-                value = value - speed;
+                value = value - this.speed;
             }
 
             this.camera.position[index] = parseFloat(value.toFixed(2));
