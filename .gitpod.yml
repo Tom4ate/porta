@@ -6,8 +6,8 @@ tasks:
     command: npm install webpack webpack-cli webpack-dev-server --save-dev && exit
   - name: installtree
     command: npm install && exit
-  - name: webpackcopile
-    command: npx webpack && exit
+  # - name: webpackcopile
+  #   command: npx webpack && exit
   - name: webpacstartServer
     command: npx webpack server 
   # - name: DB Server
