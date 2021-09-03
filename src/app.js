@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import CameraController from './camera';
+import { DDSLoader } from './loaders/jsm/DDSLoader.js';
+import { MTLLoader } from './loaders/jsm/MTLLoader.js';
+import { OBJLoader } from './loaders/jsm/OBJLoader.js';
 
 var red = 0xf40404;
 var blue = 0x40df4;
@@ -43,9 +46,6 @@ export default class App {
         terrain.position.add({x: 0, y: 0, z:0 });
         terrain.geometry.rotateX(Math.PI / -2)
         
-        // console.log(THREE);
-        console.log("terrain",terrain);
-        
         // adiciona aos objetos reendenizados
         if(!this.objectsRendered.planes) {
             this.objectsRendered.planes = [];
@@ -53,7 +53,61 @@ export default class App {
 
         this.objectsRendered.planes.push( terrain );
         this.scene.add( terrain );
+
+        let onProgress = ( xhr ) => {
+            console.log(xhr);
+        }
+
+        let onError = ( e ) => {
+            console.log(e);
+        }
+
+        const manager = new THREE.LoadingManager();
+        manager.addHandler( /\.dds$/i, new DDSLoader() );
+
+        // comment in the following line and import TGALoader if your asset uses TGA textures
+        // manager.addHandler( /\.tga$/i, new TGALoader() );
+        
+        new MTLLoader( manager )
+            .setPath( 'models/Trees/' )
+            .load( 'Birch_1.mtl', function ( materials ) {
+
+                console.log("jorge?")
+                materials.preload();
+
+                new OBJLoader( manager )
+                    .setMaterials( materials )
+                    .setPath( 'models/obj/male02/' )
+                    .load( 'male02.obj', function ( object ) {
+
+                        object.position.y = - 95;
+                        scene.add( object );
+                        console.log("marcos?")
+
+                    }, onProgress, onError );
+
+            } );
+        
+        
+            
         this.render();
+        this.animate();
+    }
+
+    animate() {
+        let renderer = this.renderer;
+        let scene = this.scene;
+        let camera = this.camera;
+                
+        let render = function render () {
+            renderer.render( scene, camera );
+        };    
+        let animate = function animate() {
+
+            requestAnimationFrame( animate );
+            render();
+
+        }
 
     }
 
