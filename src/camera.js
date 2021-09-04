@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { OrbitControls } from './camera_modes/OrbitControls';
+import { OrbitControls } from './utils/jsm/controls/OrbitControls';
 
 export default class CameraControl {
     constructor(camera,render) {

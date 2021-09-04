@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import CameraController from './camera';
-import { DDSLoader } from './loaders/jsm/DDSLoader.js';
-import { MTLLoader } from './loaders/jsm/MTLLoader.js';
-import { OBJLoader } from './loaders/jsm/OBJLoader.js';
+import { GLTFLoader } from './utils/jsm/loaders/GLTFLoader.js';
+import { RGBELoader } from './utils/jsm/loaders/RGBELoader.js';
+import { RoughnessMipmapper } from './utils/jsm/utils/RoughnessMipmapper.js';
 
 var red = 0xf40404;
 var blue = 0x40df4;
@@ -28,68 +28,56 @@ export default class App {
         // cameraControl.setMode("keysControl");
         cameraControl.setPosition(0,1,5);
         this.setupDebug();
-        
-        // start terrain
-        // this.addBasicBox(0,1,1,0,0,0);
-        
-        const planeVector = new THREE.Vector3(
-            1, 0, 1);
+        this.setupTerrain();
 
-        var geometry = new THREE.PlaneGeometry(5,5,5,5);
-        var material = new THREE.MeshStandardMaterial({
-            color: 0xFFFFFF,
-            side: THREE.FrontSide,
-            vertexColors: THREE.VertexColors,
+        // let onProgress = ( xhr ) => {
+        //     console.log(xhr);
+        // }
+
+        // let onError = ( e ) => {
+        //     console.log(e);
+        // }
+
+        var self = this;
+        
+        new RGBELoader()
+        .setPath( 'textures/' )
+        .load( 'sky.hdr', function ( texture ) {
+
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+
+            self.scene.background = texture;
+            self.scene.environment = texture;
+
+            self.render();
+            
         });
-        var terrain = new THREE.Mesh( geometry, material );	
+
         
-        terrain.position.add({x: 0, y: 0, z:0 });
-        terrain.geometry.rotateX(Math.PI / -2)
-        
-        // adiciona aos objetos reendenizados
-        if(!this.objectsRendered.planes) {
-            this.objectsRendered.planes = [];
-        }
+        // use of RoughnessMipmapper is optional
+        const roughnessMipmapper = new RoughnessMipmapper( self.renderer );
 
-        this.objectsRendered.planes.push( terrain );
-        this.scene.add( terrain );
+        const loader = new GLTFLoader().setPath( 'models/birch_1/' );
+        loader.load( 'birch_1.gltf', function ( gltf ) {
 
-        let onProgress = ( xhr ) => {
-            console.log(xhr);
-        }
+            gltf.scene.traverse( function ( child ) {
 
-        let onError = ( e ) => {
-            console.log(e);
-        }
+                if ( child.isMesh ) {
 
-        const manager = new THREE.LoadingManager();
-        manager.addHandler( /\.dds$/i, new DDSLoader() );
+                    roughnessMipmapper.generateMipmaps( child.material );
 
-        // comment in the following line and import TGALoader if your asset uses TGA textures
-        // manager.addHandler( /\.tga$/i, new TGALoader() );
-        
-        new MTLLoader( manager )
-            .setPath( 'models/Trees/' )
-            .load( 'Birch_1.mtl', function ( materials ) {
-
-                console.log("jorge?")
-                materials.preload();
-
-                new OBJLoader( manager )
-                    .setMaterials( materials )
-                    .setPath( 'models/obj/male02/' )
-                    .load( 'male02.obj', function ( object ) {
-
-                        object.position.y = - 95;
-                        scene.add( object );
-                        console.log("marcos?")
-
-                    }, onProgress, onError );
+                }
 
             } );
+
+            self.scene.add( gltf.scene );
+
+            roughnessMipmapper.dispose();
+
+            self.render();
+
+        } );
         
-        
-            
         this.render();
         this.animate();
     }
@@ -156,6 +144,34 @@ export default class App {
 
     }
 
+    setupTerrain() {
+                
+        // start terrain
+        // this.addBasicBox(0,1,1,0,0,0);
+        
+        const planeVector = new THREE.Vector3(
+            1, 0, 1);
+
+        var geometry = new THREE.PlaneGeometry(5,5,5,5);
+        var material = new THREE.MeshStandardMaterial({
+            color: 0xFFFFFF,
+            side: THREE.FrontSide,
+            vertexColors: THREE.VertexColors,
+        });
+        var terrain = new THREE.Mesh( geometry, material );	
+        
+        terrain.position.add({x: 0, y: 0, z:0 });
+        terrain.geometry.rotateX(Math.PI / -2)
+        
+        // adiciona aos objetos reendenizados
+        if(!this.objectsRendered.planes) {
+            this.objectsRendered.planes = [];
+        }
+
+        this.objectsRendered.planes.push( terrain );
+        this.scene.add( terrain );
+    }
+
     render(){
         this.renderer.render( this.scene, this.camera );
     }
@@ -175,6 +191,11 @@ export default class App {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color( 0xcccccc );
         this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+        
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+
         this.renderer.setSize( window.innerWidth, window.innerHeight );
         
         document.body.appendChild( this.renderer.domElement );

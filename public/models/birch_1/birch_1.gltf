@@ -1,0 +1,265 @@
+{
+    "asset": {
+        "generator": "FBX2glTF v0.9.7",
+        "version": "2.0"
+    },
+    "scene": 0,
+    "buffers": [
+        {
+            "byteLength": 67180,
+            "uri": "buffer.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 7242,
+            "byteOffset": 0,
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 10608,
+            "byteOffset": 7244,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 10608,
+            "byteOffset": 17852,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 7072,
+            "byteOffset": 28460,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 6624,
+            "byteOffset": 35532,
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 9384,
+            "byteOffset": 42156,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 9384,
+            "byteOffset": 51540,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 6256,
+            "byteOffset": 60924,
+            "target": 34962
+        }
+    ],
+    "scenes": [
+        {
+            "name": "Root Scene",
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "accessors": [
+        {
+            "componentType": 5123,
+            "type": "SCALAR",
+            "count": 3621,
+            "bufferView": 0,
+            "byteOffset": 0
+        },
+        {
+            "componentType": 5126,
+            "type": "VEC3",
+            "count": 884,
+            "bufferView": 1,
+            "byteOffset": 0,
+            "min": [
+                -0.024480227380991,
+                -0.0152649814262986,
+                -1.09776256067562e-05
+            ],
+            "max": [
+                0.0141021879389882,
+                0.0153250377625227,
+                0.0937227830290794
+            ]
+        },
+        {
+            "componentType": 5126,
+            "type": "VEC3",
+            "count": 884,
+            "bufferView": 2,
+            "byteOffset": 0
+        },
+        {
+            "componentType": 5126,
+            "type": "VEC2",
+            "count": 884,
+            "bufferView": 3,
+            "byteOffset": 0
+        },
+        {
+            "componentType": 5123,
+            "type": "SCALAR",
+            "count": 3312,
+            "bufferView": 4,
+            "byteOffset": 0
+        },
+        {
+            "componentType": 5126,
+            "type": "VEC3",
+            "count": 782,
+            "bufferView": 5,
+            "byteOffset": 0,
+            "min": [
+                -0.0287898276001215,
+                -0.0196094326674938,
+                0.0369408950209618
+            ],
+            "max": [
+                0.0201440881937742,
+                0.0250120349228382,
+                0.0947534516453743
+            ]
+        },
+        {
+            "componentType": 5126,
+            "type": "VEC3",
+            "count": 782,
+            "bufferView": 6,
+            "byteOffset": 0
+        },
+        {
+            "componentType": 5126,
+            "type": "VEC2",
+            "count": 782,
+            "bufferView": 7,
+            "byteOffset": 0
+        }
+    ],
+    "samplers": [
+        {}
+    ],
+    "materials": [
+        {
+            "name": "Birch_Bark",
+            "alphaMode": "OPAQUE",
+            "extras": {
+                "fromFBX": {
+                    "shadingModel": "Phong",
+                    "isTruePBR": false
+                }
+            },
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.0
+                ],
+                "metallicFactor": 0.400000005960464,
+                "roughnessFactor": 1.0
+            }
+        },
+        {
+            "name": "Birch_Leaves",
+            "alphaMode": "OPAQUE",
+            "extras": {
+                "fromFBX": {
+                    "shadingModel": "Phong",
+                    "isTruePBR": false
+                }
+            },
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.0
+                ],
+                "metallicFactor": 0.400000005960464,
+                "roughnessFactor": 1.0
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Birch_1",
+            "primitives": [
+                {
+                    "material": 0,
+                    "mode": 4,
+                    "attributes": {
+                        "NORMAL": 2,
+                        "POSITION": 1,
+                        "TEXCOORD_0": 3
+                    },
+                    "indices": 0
+                },
+                {
+                    "material": 1,
+                    "mode": 4,
+                    "attributes": {
+                        "NORMAL": 6,
+                        "POSITION": 5,
+                        "TEXCOORD_0": 7
+                    },
+                    "indices": 4
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "RootNode",
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "children": [
+                1
+            ]
+        },
+        {
+            "name": "Birch_1",
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -0.707106828689575,
+                0.0,
+                0.0,
+                0.707106709480286
+            ],
+            "scale": [
+                100.0,
+                100.0,
+                100.0
+            ],
+            "mesh": 0
+        }
+    ]
+}
