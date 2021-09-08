@@ -65,7 +65,7 @@ export default class CameraControl {
                 this.mode = "orbit";
                 var app = this.app;
                 const controls = new OrbitControls(this.camera, this.app.renderer.domElement);
-                controls.target.set(0, 0, 0);
+                controls.target.set(0, 1, 0);
                 
                 controls.listenToKeyEvents( window ); // optional
                 
