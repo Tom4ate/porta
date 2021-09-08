@@ -157,6 +157,8 @@ export default class App {
 
         this.objectsRendered[type].push( mesh );
         this.scene.add( mesh );
+
+        return this.objectsRendered[type].length - 1;
     }
 
     addAnimations(mesh,id,type = "others") {
@@ -352,18 +354,19 @@ export default class App {
     fbxLoadModels(type = null ) {
 
         var items = [
-            "models/characters/FBX/BlueSoldier_Female.fbx","models/characters/FBX/BlueSoldier_Male.fbx",
-            "models/characters/FBX/Casual2_Female.fbx","models/characters/FBX/Casual2_Male.fbx","models/characters/FBX/Casual3_Female.fbx",
-            "models/characters/FBX/Casual3_Male.fbx","models/characters/FBX/Casual_Bald.fbx","models/characters/FBX/Casual_Female.fbx","models/characters/FBX/Casual_Male.fbx",
-            "models/characters/FBX/Chef_Female.fbx","models/characters/FBX/Chef_Hat.fbx","models/characters/FBX/Chef_Male.fbx","models/characters/FBX/Cow.fbx","models/characters/FBX/Cowboy_Female.fbx",
-            "models/characters/FBX/Cowboy_Hair.fbx","models/characters/FBX/Cowboy_Male.fbx","models/characters/FBX/Doctor_Female_Old.fbx","models/characters/FBX/Doctor_Female_Young.fbx",
-            "models/characters/FBX/Doctor_Male_Old.fbx","models/characters/FBX/Doctor_Male_Young.fbx","models/characters/FBX/Elf.fbx","models/characters/FBX/Goblin_Female.fbx","models/characters/FBX/Goblin_Male.fbx",
-            "models/characters/FBX/Kimono_Female.fbx","models/characters/FBX/Kimono_Male.fbx","models/characters/FBX/Knight_Golden_Female.fbx","models/characters/FBX/Knight_Golden_Male.fbx",
-            "models/characters/FBX/Knight_Male.fbx","models/characters/FBX/Ninja_Female.fbx","models/characters/FBX/Ninja_Male.fbx","models/characters/FBX/Ninja_Male_Hair.fbx","models/characters/FBX/Ninja_Sand.fbx",
-            "models/characters/FBX/Ninja_Sand_Female.fbx","models/characters/FBX/OldClassy_Female.fbx","models/characters/FBX/OldClassy_Male.fbx","models/characters/FBX/Pirate_Female.fbx",
-            "models/characters/FBX/Pirate_Male.fbx","models/characters/FBX/Pug.fbx","models/characters/FBX/Soldier_Female.fbx","models/characters/FBX/Soldier_Male.fbx","models/characters/FBX/Suit_Female.fbx","models/characters/FBX/Suit_Male.fbx",
-            "models/characters/FBX/VikingHelmet.fbx","models/characters/FBX/Viking_Female.fbx","models/characters/FBX/Viking_Male.fbx","models/characters/FBX/Witch.fbx","models/characters/FBX/Wizard.fbx","models/characters/FBX/Worker_Female.fbx",
-            "models/characters/FBX/Worker_Male.fbx","models/characters/FBX/Zombie_Female.fbx","models/characters/FBX/Zombie_Male.fbx"
+            "models/characters/FBX/Witch.fbx"
+            // "models/characters/FBX/BlueSoldier_Female.fbx","models/characters/FBX/BlueSoldier_Male.fbx",
+            // "models/characters/FBX/Casual2_Female.fbx","models/characters/FBX/Casual2_Male.fbx","models/characters/FBX/Casual3_Female.fbx",
+            // "models/characters/FBX/Casual3_Male.fbx","models/characters/FBX/Casual_Bald.fbx","models/characters/FBX/Casual_Female.fbx","models/characters/FBX/Casual_Male.fbx",
+            // "models/characters/FBX/Chef_Female.fbx","models/characters/FBX/Chef_Hat.fbx","models/characters/FBX/Chef_Male.fbx","models/characters/FBX/Cow.fbx","models/characters/FBX/Cowboy_Female.fbx",
+            // "models/characters/FBX/Cowboy_Hair.fbx","models/characters/FBX/Cowboy_Male.fbx","models/characters/FBX/Doctor_Female_Old.fbx","models/characters/FBX/Doctor_Female_Young.fbx",
+            // "models/characters/FBX/Doctor_Male_Old.fbx","models/characters/FBX/Doctor_Male_Young.fbx","models/characters/FBX/Elf.fbx","models/characters/FBX/Goblin_Female.fbx","models/characters/FBX/Goblin_Male.fbx",
+            // "models/characters/FBX/Kimono_Female.fbx","models/characters/FBX/Kimono_Male.fbx","models/characters/FBX/Knight_Golden_Female.fbx","models/characters/FBX/Knight_Golden_Male.fbx",
+            // "models/characters/FBX/Knight_Male.fbx","models/characters/FBX/Ninja_Female.fbx","models/characters/FBX/Ninja_Male.fbx","models/characters/FBX/Ninja_Male_Hair.fbx","models/characters/FBX/Ninja_Sand.fbx",
+            // "models/characters/FBX/Ninja_Sand_Female.fbx","models/characters/FBX/OldClassy_Female.fbx","models/characters/FBX/OldClassy_Male.fbx","models/characters/FBX/Pirate_Female.fbx",
+            // "models/characters/FBX/Pirate_Male.fbx","models/characters/FBX/Pug.fbx","models/characters/FBX/Soldier_Female.fbx","models/characters/FBX/Soldier_Male.fbx","models/characters/FBX/Suit_Female.fbx","models/characters/FBX/Suit_Male.fbx",
+            // "models/characters/FBX/VikingHelmet.fbx","models/characters/FBX/Viking_Female.fbx","models/characters/FBX/Viking_Male.fbx","models/characters/FBX/Witch.fbx","models/characters/FBX/Wizard.fbx","models/characters/FBX/Worker_Female.fbx",
+            // "models/characters/FBX/Worker_Male.fbx","models/characters/FBX/Zombie_Female.fbx","models/characters/FBX/Zombie_Male.fbx"
         ];
 
         // var items = [
@@ -379,7 +382,7 @@ export default class App {
         for (let index = 0; index < items.length; index++) {
 
             var item = items[index];
-
+            
             loader.load(item,function(object) {
                 let pos = { x: x * 2 , z: z * - 2 };
 
