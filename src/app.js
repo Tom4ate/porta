@@ -1,18 +1,11 @@
 import * as THREE from 'three';
 import CameraController from './camera';
-
-// gltf
-
-import { GLTFLoader } from './utils/jsm/loaders/GLTFLoader.js';
-import { RGBELoader } from './utils/jsm/loaders/RGBELoader.js';
-import { RoughnessMipmapper } from './utils/jsm/utils/RoughnessMipmapper.js';
-
-// fbx
-
-import { FBXLoader } from './utils/jsm/loaders/FBXLoader.js';
+import Store from './store';
+import BoxCreator from './box-creator';
+import keyBordController from './keybord-controller';
 
 var red = 0xf40404;
-var blue = 0x40df4;
+var blue = 0x87ceeb;
 var green = 0x4f41b;
 var gray = 0xcccccc;
 const clock = new THREE.Clock();
@@ -25,32 +18,54 @@ export default class App {
         this.renderer = null;
         this.objectsRendered = {};
         this.mixers = [];
+        this.entytis = [];
         this.animations = {};
+        this.keyBordController = new keyBordController();
+        this.store = new Store();
     }
     
     main() {
         console.log("iniciamos o app.",this);
-        var self = this;
-        // start 3d start cene
-
+        
+        // start 3d start scene
         this.createScene();
+
         var cameraControl = new CameraController( this );
         cameraControl.setMode("orbit");
         // cameraControl.setMode("keysControl");
         cameraControl.setPosition(0,4,5);
+        
         this.setupDebug();
         this.setupTerrain();
         // this.setupSky();
         this.createLight();
-
+        // end 3d scene
+        
+        // first render
         this.render();
+
+        // load game content
+        this.loadPlayer();
+        this.loadEntytis();
+
+        // start game loop
         this.animate();
+    }
 
-        // start the game
-        this.fbxLoadModels("charters");
+    loadPlayer () {
+        var player = this.store.getPlayer();
 
-        // Play a specific animation 
-        // action.play();
+        player.load( this );
+    }
+    
+    loadEntytis(){
+        var entytis = this.store.getEntytis();
+
+        for (let index = 0; index < entytis.length; index++) {
+            var entyti = entytis[index];
+
+            entyti.load(this);
+        }
     }
 
     animate() {
@@ -58,6 +73,7 @@ export default class App {
         let scene = this.scene;
         let camera = this.camera;
         let mixers = this.mixers;
+        let entytis = this.entytis;
                 
         let render = function render () {
             renderer.render( scene, camera );
@@ -71,6 +87,12 @@ export default class App {
                 mixers.map((item) => item.update( deltaSeconds ));
             }
 
+            if(entytis.length) {
+
+                entytis.map((item) => item._update())
+                
+            }
+
             requestAnimationFrame( animate );
             render();
 
@@ -81,9 +103,15 @@ export default class App {
 
     setupDebug(){
 
-        let y = this.addBasicBox(100,0.01,0.01,null,null,null,{ color: red }); // y
-        let x = this.addBasicBox(0.01,100,0.01,null,null,null,{ color: green }); // x
-        let z = this.addBasicBox(0.01,0.01,100,null,null,null,{ color: blue }); // y
+        let boxCreator = new BoxCreator(this);
+
+        let y = boxCreator.addBasicBox(100,0.01,0.01,null,null,null,{ color: red }); // y
+        let x = boxCreator.addBasicBox(0.01,100,0.01,null,null,null,{ color: green }); // x
+        let z = boxCreator.addBasicBox(0.01,0.01,100,null,null,null,{ color: blue }); // y
+
+        this.addToMap(y,"box");
+        this.addToMap(x,"box");
+        this.addToMap(z,"box");
 
         y.material.visible = false;
         x.material.visible = false;
@@ -92,36 +120,37 @@ export default class App {
         this.wireframe = false;
         this.visibleDebug = false;
         this.debugAxis = { x, y, z }; 
-        
-        document.addEventListener("keydown",(event) => {
-            if(event.key == "w") {
-                let keys = Object.keys(this.objectsRendered);
-                let value = !this.wireframe;
-                this.wireframe = !this.wireframe;
 
-                for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
-                    let key = keys[keyIndex];
-                    
-                    for (let index = 0; index < this.objectsRendered[key].length; index++) {
-                        let element = this.objectsRendered[key][index];
+        this.keyBordController.addEvent("keydown",{key: 'z'},()=>{
+            let keys = Object.keys(this.objectsRendered);
+            let value = !this.wireframe;
+            this.wireframe = !this.wireframe;
 
+            for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+                let key = keys[keyIndex];
+                
+                for (let index = 0; index < this.objectsRendered[key].length; index++) {
+                    let element = this.objectsRendered[key][index];
+
+                    if(element.material) {
                         element.material.wireframe = value;
+                    // } else if (element.type = "Group") {
+                    //     console.log(element);
                     }
                 }
             }
+        })
 
-            if(event.key == "x") {
-                let keys = Object.keys(this.debugAxis);
-                let value = !this.visibleDebug;
-                this.visibleDebug = !this.visibleDebug;
+        this.keyBordController.addEvent("keydown",{key: 'x'},() => {
+            let keys = Object.keys(this.debugAxis);
+            let value = !this.visibleDebug;
+            this.visibleDebug = !this.visibleDebug;
 
-                for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
-                    
-                    this.debugAxis[keys[keyIndex]].material.visible = value;
-                }
+            for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+                
+                this.debugAxis[keys[keyIndex]].material.visible = value;
             }
-        });
-
+        })
     }
 
     setupTerrain() {
@@ -129,12 +158,14 @@ export default class App {
         // start terrain
         // this.addBasicBox(0,1,1,0,0,0);
 
-        var x = 100;
-        var y = 100;
+        let mapaData = this.store.getMap();
+
+        var x = mapaData.width;
+        var y = mapaData.height;
 
         var geometry = new THREE.PlaneGeometry(x,y,5,5);
         var material = new THREE.MeshBasicMaterial({
-            // color: 0x6CD63E,
+            color: mapaData.color,
             // side: THREE.FrontSide,
             // vertexColors: THREE.VertexColors,
         });
@@ -159,6 +190,10 @@ export default class App {
         this.scene.add( mesh );
 
         return this.objectsRendered[type].length - 1;
+    }
+
+    addEntyti( entyti ) {
+        this.entytis.push( entyti );
     }
 
     addAnimations(mesh,id,type = "others") {
@@ -198,7 +233,7 @@ export default class App {
         this.camera.position.z = zPos;
 
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color( gray );
+        this.scene.background = new THREE.Color( blue );
         this.renderer = new THREE.WebGLRenderer( { antialias: true } );
         
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -209,126 +244,6 @@ export default class App {
         
         document.body.appendChild( this.renderer.domElement );
 
-    }
-
-    addNormalBox( height = null,width = null,depth = null, x = null, y = null, z = null, options = null ) {
-        let color = false; 
-
-        // default box
-        if(!options) {
-            options = {};
-        }
-
-        // 0.2, 0.2, 0.2
-        var geometry = new THREE.BoxGeometry( width, height, depth );
-        var material = new THREE.MeshNormalMaterial();
-        var mesh = new THREE.Mesh( geometry, material );	
-
-        if	(x === 0 || x) {
-            mesh.position.x = x;
-        }
-        
-        if	(y === 0 || y) {
-            mesh.position.y = y;
-        }
-
-        if	(z === 0 || z) {
-            mesh.position.z = z;
-        }
-
-        if(options.color) {
-            // console.log(material.color,mesh.color);
-            // material.color.set(options.color);
-        }
-        
-        this.scene.add( mesh );
-        this.render();
-
-        return mesh
-    }
-    
-    addBasicBox( height = null,width = null,depth = null, x = null, y = null, z = null, options = null ) {
-
-        // default box
-        if(!options) {
-            options = {};
-        }
-
-        // 0.2, 0.2, 0.2
-        var geometry = new THREE.BoxGeometry( width, height, depth );
-        var material = new THREE.MeshBasicMaterial(options);
-        var mesh = new THREE.Mesh( geometry, material );	
-
-        // if	(x === 0 || x) {
-        //     mesh.position.x = x;
-        // }
-        
-        // if	(y === 0 || y) {
-        //     mesh.position.y = y;
-        // }
-
-        // if	(z === 0 || z) {
-        //     mesh.position.z = z;
-        // }
-
-        if(options.color) {
-            material.color.set(options.color)
-        }
-        
-        if(!this.objectsRendered.box) {
-            this.objectsRendered.box = [];
-        }
-
-        this.objectsRendered.box.push( mesh );
-        this.scene.add( mesh );
-        this.render();
-
-        return mesh;
-    }
-
-    setupSky() {
-        var self = this;
-        
-        new RGBELoader()
-        .setPath( 'textures/' )
-        .load( 'sky.hdr', function ( texture ) {
-
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-
-            self.scene.background = texture;
-            self.scene.environment = texture;
-
-            self.render();
-            
-        });
-    }
-
-    gltfLoadThree(){
-        var self = this;
-        // use of RoughnessMipmapper is optional
-        const roughnessMipmapper = new RoughnessMipmapper( self.renderer );
-
-        const loader = new GLTFLoader().setPath( 'models/birch_1/' );
-        loader.load( 'birch_1.gltf', function ( gltf ) {
-
-            gltf.scene.traverse( function ( child ) {
-
-                if ( child.isMesh ) {
-
-                    roughnessMipmapper.generateMipmaps( child.material );
-
-                }
-
-            } );
-
-            self.scene.add( gltf.scene );
-
-            roughnessMipmapper.dispose();
-
-            self.render();
-
-        } );
-        
     }
     
     createLight() {
@@ -351,56 +266,4 @@ export default class App {
 
     }
 
-    fbxLoadModels(type = null ) {
-
-        var items = [
-            "models/characters/FBX/Witch.fbx"
-            // "models/characters/FBX/BlueSoldier_Female.fbx","models/characters/FBX/BlueSoldier_Male.fbx",
-            // "models/characters/FBX/Casual2_Female.fbx","models/characters/FBX/Casual2_Male.fbx","models/characters/FBX/Casual3_Female.fbx",
-            // "models/characters/FBX/Casual3_Male.fbx","models/characters/FBX/Casual_Bald.fbx","models/characters/FBX/Casual_Female.fbx","models/characters/FBX/Casual_Male.fbx",
-            // "models/characters/FBX/Chef_Female.fbx","models/characters/FBX/Chef_Hat.fbx","models/characters/FBX/Chef_Male.fbx","models/characters/FBX/Cow.fbx","models/characters/FBX/Cowboy_Female.fbx",
-            // "models/characters/FBX/Cowboy_Hair.fbx","models/characters/FBX/Cowboy_Male.fbx","models/characters/FBX/Doctor_Female_Old.fbx","models/characters/FBX/Doctor_Female_Young.fbx",
-            // "models/characters/FBX/Doctor_Male_Old.fbx","models/characters/FBX/Doctor_Male_Young.fbx","models/characters/FBX/Elf.fbx","models/characters/FBX/Goblin_Female.fbx","models/characters/FBX/Goblin_Male.fbx",
-            // "models/characters/FBX/Kimono_Female.fbx","models/characters/FBX/Kimono_Male.fbx","models/characters/FBX/Knight_Golden_Female.fbx","models/characters/FBX/Knight_Golden_Male.fbx",
-            // "models/characters/FBX/Knight_Male.fbx","models/characters/FBX/Ninja_Female.fbx","models/characters/FBX/Ninja_Male.fbx","models/characters/FBX/Ninja_Male_Hair.fbx","models/characters/FBX/Ninja_Sand.fbx",
-            // "models/characters/FBX/Ninja_Sand_Female.fbx","models/characters/FBX/OldClassy_Female.fbx","models/characters/FBX/OldClassy_Male.fbx","models/characters/FBX/Pirate_Female.fbx",
-            // "models/characters/FBX/Pirate_Male.fbx","models/characters/FBX/Pug.fbx","models/characters/FBX/Soldier_Female.fbx","models/characters/FBX/Soldier_Male.fbx","models/characters/FBX/Suit_Female.fbx","models/characters/FBX/Suit_Male.fbx",
-            // "models/characters/FBX/VikingHelmet.fbx","models/characters/FBX/Viking_Female.fbx","models/characters/FBX/Viking_Male.fbx","models/characters/FBX/Witch.fbx","models/characters/FBX/Wizard.fbx","models/characters/FBX/Worker_Female.fbx",
-            // "models/characters/FBX/Worker_Male.fbx","models/characters/FBX/Zombie_Female.fbx","models/characters/FBX/Zombie_Male.fbx"
-        ];
-
-        // var items = [
-        //     "models/monster/FBX/Bat.fbx","models/monster/FBX/Dragon.fbx","models/monster/FBX/Skeleton.fbx","models/monster/FBX/Slime.fbx"
-        // ];
-
-        var self = this;
-        var loader = new FBXLoader();
-                            
-        var x = 0;
-        var z = 0;
-
-        for (let index = 0; index < items.length; index++) {
-
-            var item = items[index];
-            
-            loader.load(item,function(object) {
-                let pos = { x: x * 2 , z: z * - 2 };
-
-                object.position.setZ(pos.z);
-                object.position.setX(pos.x);
-                object.scale.setLength(0.015);
-                let id = self.addToMap( object , "items" );
-                self.addAnimations(object ,id,"items");
-                
-                if(z > 10){
-                    z = 0;
-                    x++;
-                } else {    
-                    z++;
-                }
-                
-            });
-                            
-        }
-    }
 }
