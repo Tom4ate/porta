@@ -33,7 +33,7 @@ export default class App {
         var cameraControl = new CameraController( this );
         cameraControl.setMode("orbit");
         // cameraControl.setMode("keysControl");
-        cameraControl.setPosition(0,4,5);
+        cameraControl.setPosition(0,20,30);
         
         this.setupDebug();
         this.setupTerrain();
@@ -78,21 +78,23 @@ export default class App {
         let render = function render () {
             renderer.render( scene, camera );
         };
-        
-        let animate = function animate() {
-            
-            if(mixers.length) { 
-                let deltaSeconds = clock.getDelta();
 
-                mixers.map((item) => item.update( deltaSeconds ));
-            }
+        var lastSecod = null;
+        
+        let animate = function animate(t) {
+
+            if(!lastSecod) { lastSecod = t};
 
             if(entytis.length) {
 
-                entytis.map((item) => item._update())
+                let deltaSeconds = clock.getDelta();
+                let timeInSecods = (t - lastSecod) * 0.001;
+
+                entytis.map((item) => item._update(timeInSecods,deltaSeconds))
                 
             }
 
+            lastSecod = t;
             requestAnimationFrame( animate );
             render();
 

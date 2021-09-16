@@ -34,6 +34,8 @@ export default class keyBordController {
             
             if(action.key == event.key) {
                 action.callBack(event);
+            } else if(action.keyArray && action.keyArray.includes(event.key)) {
+                action.callBack(event);
             }
         }
         
@@ -46,11 +48,16 @@ export default class keyBordController {
         }
 
         if(!options) {
-            options = null;
+            options = {};
         }
 
         if(this[type] === undefined || !Array.isArray(this[type])) {
             return;
+        }
+        
+        if(Array.isArray(options.key)) {
+            options.keyArray = options.key;
+            delete options.key;
         }
         
         this[type].push( {

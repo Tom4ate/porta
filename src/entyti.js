@@ -11,17 +11,43 @@ import { RoughnessMipmapper } from './utils/jsm/utils/RoughnessMipmapper.js';
 import { FBXLoader } from './utils/jsm/loaders/FBXLoader.js';
 
 export default class Entyti {
-    constructor ({ name, loaderType, fileName, scale, actions, position, rotation }) {
+    constructor ({ name, loaderType, fileName, filePath, scale, actions, position, rotation, moveable, rotationSpeed, animated, animations }) {
         this.name = name;
         this.mesh = null;
         this.loaderType = loaderType;
         this.fileName = fileName;
+        this.filePath = filePath;
         this.scale = scale;
         this.actionsList = actions || [];
         this.actions = {};
         this.activeAction = null;
         this.position = position;
         this.rotation = rotation;
+        this.moveable = moveable ;
+        this.animated = animated ;
+        this.animationList = animations;
+        this.animations = {};
+        this.mixer = null;
+        
+        if  (this.moveable) {
+            this.stateMachine = {
+                activeState: null,
+                movement: {
+                    front: false,
+                    back: false,
+                    left: false,
+                    right: false,
+                    speedVector: new THREE.Vector3(0,0,0),
+                    walkAceleretion: new THREE.Vector3(1, 0.25, 50),
+                    runAceleretion: new THREE.Vector3(0,2,0),
+                    vectorsList: [],
+                }
+            }
+            this.rotationSpeed = rotationSpeed || Math.PI / 40 ;
+            this.decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
+
+        }
+        
     }
 
     load(app) {
@@ -38,7 +64,7 @@ export default class Entyti {
             switch(this.loaderType) {
                 case "fbx":
                     loader = new FBXLoader();
-                    filePath = "models/characters/FBX/";
+                    filePath = this.filePath;
                     break;
                 default:
                     return;
@@ -74,10 +100,6 @@ export default class Entyti {
     onLoadFile(mesh,app) {
 
         let chengebleMesh = mesh;
-        
-        if(mesh.isGroup) { 
-            chengebleMesh = mesh.children[1].children[0]; 
-        }
 
         // scale
         if(this.scale) {
@@ -85,43 +107,200 @@ export default class Entyti {
         }
 
         // rotation
-        if(this.rotation) {
-            // chengebleMesh.rotation = rotationVector;
-        }
+        // if(this.rotation && chengebleMesh) {
+            // chengebleMesh.setRotationFromEuler(this.rotation);
+        // }
 
-        this.rotation = chengebleMesh.rotation;
+        // this.rotation = chengebleMesh.rotation;
+        this.quaternion = mesh.quaternion;
         
         // position
         if(this.postion) {
             // chengebleMesh.position = postionVector;
         }
 
-        this.position = chengebleMesh.position;
+        this.position = mesh.position;
 
         // this.mesh = mesh;
         
         // add to the scene
         let id = app.addToMap( mesh , this.name );
-        app.addAnimations(mesh ,id, this.name);
+        // app.addAnimations(mesh ,id, this.name);
+        
+        if(this.animated) {
+            
+            let mixer = new THREE.AnimationMixer( mesh );
+            this.mixer = mixer;
+
+            for (let index = 0; index < this.animationList.length; index++) {
+                var animation = this.animationList[index];
+                var filePath = null;
+                var loader = null;
+
+                switch(animation.loaderType) {
+                    case "fbx":
+                        loader = new FBXLoader();
+                        filePath = animation.filePath;
+                        break;
+                    default:
+                        return;
+                }
+                
+                loader.load(filePath + '/' + animation.fileName, (animationloaded) => {
+
+                    console.log(animationloaded);
+                    
+                    let animationAction = mixer.clipAction( animationloaded.animations[0] );
+                    animationAction.enabled = true;
+                    this.animations[animation.name] = animationAction;
+
+                } );
+
+                
+                
+            }
+
+        }
         
     }
 
-    _update(){
+    _update(timeInSeconds,deltaSeconds){
         if(this.activeAction){
-            this[this.activeAction]();
+            this[this.activeAction](timeInSeconds,deltaSeconds);
         }
-    }
-    
-    walkFowerd(){
-        this.activeAction = "walkFowerd";
-        console.log(this.position.y);
-        this.position.setY(this.position.y + 0.1);
-        console.log(this.position);
+
+        if(this.moveable) {
+            this.updateMovement(timeInSeconds,deltaSeconds);
+        }
+        
     }
 
-    stop() {
-        this.activeAction = null;
-        console.log("stop")
+    updateMovement(timeInSeconds,deltaSeconds) {
+        // vectors calculation
+
+        // self movement 
+        if(this.stateMachine && this.position) {
+            
+            var speed = this.stateMachine.movement.speedVector;
+            var decceleration = this.decceleration;
+
+            var frameDecceleration = new THREE.Vector3(
+                speed.x * decceleration.x,
+                speed.y * decceleration.y,
+                speed.z * decceleration.z
+            );
+            frameDecceleration.multiplyScalar(timeInSeconds);
+            frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
+                Math.abs(frameDecceleration.z), Math.abs(speed.z));
+
+            speed.add(frameDecceleration);
+
+            var _Q = new THREE.Quaternion();
+            var _A = new THREE.Vector3();
+            var _R = this.quaternion.clone();                    
+
+            var walkAceleretion = this.stateMachine.movement.walkAceleretion;
+            var acc = walkAceleretion.clone();
+
+            // if (this._input._keys.shift) {
+            //     acc.multiplyScalar(2.0);
+            // }
+
+            // if (this._stateMachine._currentState.Name == 'dance') {
+            //     acc.multiplyScalar(0.0);
+            // }
+            
+            // quarternius corretion
+
+            if (this.stateMachine.movement.front) {
+                speed.z += acc.z * timeInSeconds;
+            }
+
+            if (this.stateMachine.movement.back) {
+                speed.z -= acc.z * timeInSeconds;
+            }
+
+            if (this.stateMachine.movement.left) {
+                _A.set(0, 1, 0);
+                _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * walkAceleretion.y);
+                _R.multiply(_Q);
+            }
+
+            if (this.stateMachine.movement.right) {
+                _A.set(0, 1, 0);
+                _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * walkAceleretion.y);
+                _R.multiply(_Q);
+            }
+
+            this.quaternion.copy(_R);
+
+            const forward = new THREE.Vector3(0, 0, 1);
+            forward.applyQuaternion(this.quaternion); 
+            forward.normalize();
+
+            const sideways = new THREE.Vector3(1, 0, 0);
+            sideways.applyQuaternion(this.quaternion);
+            sideways.normalize();
+
+            sideways.multiplyScalar(speed.y * timeInSeconds);
+            forward.multiplyScalar(speed.z * timeInSeconds);
+
+            this.position.add(forward);
+            this.position.add(sideways);
+
+        }
+
+        this.updateAnimation(deltaSeconds);
+        
+    }
+    
+    walkFowerd(){ 
+        if(this.moveable) {
+            this.animations.walk.play()
+            this.stateMachine.movement.front = true;
+        }
+    }
+    walkBackwards(){ 
+        if(this.moveable) {
+            this.stateMachine.movement.back = true;
+        }
+    }
+    turnLeft(){ 
+        if(this.moveable) {
+            this.stateMachine.movement.left = true;
+        }
+    }
+    turnRight(){ 
+        if(this.moveable) {
+            this.stateMachine.movement.right = true;
+        }
+    }
+    stopFowerd(){ 
+        if(this.moveable) {
+            this.animations.walk.stop()
+            this.stateMachine.movement.front = false;
+        }
+    }
+    stopBackwards(){ 
+        if(this.moveable) {
+            this.stateMachine.movement.back = false;
+        }
+    }
+    stopTurnLeft(){ 
+        if(this.moveable) {
+            this.stateMachine.movement.left = false;
+        }
+    }
+    stopTurnRight(){ 
+        if(this.moveable) {
+            this.stateMachine.movement.right = false;
+        }
+    }
+
+    updateAnimation(deltaSeconds) {
+        if(this.mixer) {
+            this.mixer.update( deltaSeconds );
+        }
     }
     
 }
