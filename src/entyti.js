@@ -134,29 +134,38 @@ export default class Entyti {
 
             for (let index = 0; index < this.animationList.length; index++) {
                 var animation = this.animationList[index];
-                var filePath = null;
-                var loader = null;
 
-                switch(animation.loaderType) {
-                    case "fbx":
-                        loader = new FBXLoader();
-                        filePath = animation.filePath;
-                        break;
-                    default:
-                        return;
-                }
-                
-                loader.load(filePath + '/' + animation.fileName, (animationloaded) => {
-
-                    console.log(animationloaded);
+                if(animation._self !== undefined) {
                     
-                    let animationAction = mixer.clipAction( animationloaded.animations[0] );
+                    let animationAction = mixer.clipAction( mesh.animations[animation._self] );
                     animationAction.enabled = true;
                     this.animations[animation.name] = animationAction;
-
-                } );
-
+                    
+                } else {
                 
+                    var filePath = null;
+                    var loader = null;
+    
+                    switch(animation.loaderType) {
+                        case "fbx":
+                            loader = new FBXLoader();
+                            filePath = animation.filePath;
+                            break;
+                        default:
+                            return;
+                    }
+                    
+                    loader.load(filePath + '/' + animation.fileName, (animationloaded) => {
+    
+                        animationloaded.scale.setScalar(this.scale);
+                        
+                        let animationAction = mixer.clipAction( animationloaded.animations[0] );
+                        animationAction.enabled = true;
+                        this.animations[animation.name] = animationAction;
+    
+                    } );
+    
+                }                
                 
             }
 
@@ -295,6 +304,10 @@ export default class Entyti {
         if(this.moveable) {
             this.stateMachine.movement.right = false;
         }
+    }
+    
+    punch() {
+        // this.animations.punch.play()
     }
 
     updateAnimation(deltaSeconds) {

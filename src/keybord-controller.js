@@ -5,6 +5,7 @@ export default class keyBordController {
         this.keypress = [];
         this.keydown = [];
         this.keyup = [];
+        this.click = [];
 
         this.setupEventsListners();
     }
@@ -18,6 +19,9 @@ export default class keyBordController {
         });
         document.addEventListener("keyup",(event) => {
             this._hendleEvent("keyup",event);
+        });
+        document.addEventListener("click",(event) => {
+            this._hendleEvent("click",event);
         });
     }
 
@@ -36,7 +40,7 @@ export default class keyBordController {
                 action.callBack(event);
             } else if(action.keyArray && action.keyArray.includes(event.key)) {
                 action.callBack(event);
-            }
+            } 
         }
         
     }
@@ -51,7 +55,7 @@ export default class keyBordController {
             options = {};
         }
 
-        if(this[type] === undefined || !Array.isArray(this[type])) {
+        if((this[type] === undefined || !Array.isArray(this[type]) ) && type !== "click") {
             return;
         }
         

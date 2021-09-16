@@ -90,13 +90,29 @@ export default class Store {
                         function: "stopTurnRight",
                     },
                 },
+                
+                {
+                    name: "punch",
+                    keyControl: {
+                        event: "click",
+                        function: "punch",
+                    },
+                },
             ],
             animations: [
                 {
                     name: "walk",
-                    fileName: "Walk.fbx",
-                    filePath: "models/animations/",
-                    loaderType: "fbx"
+                    _self: 7
+                    // fileName: "walk.fbx",
+                    // filePath: "models/animations/",
+                    // loaderType: "fbx"
+                },
+                {
+                    name: "punch",
+                    _self: 10
+                    // fileName: "walk.fbx",
+                    // filePath: "models/animations/",
+                    // loaderType: "fbx"
                 }
             ]
         }
