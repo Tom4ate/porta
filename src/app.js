@@ -3,6 +3,8 @@ import CameraController from './camera';
 import Store from './store';
 import BoxCreator from './box-creator';
 import keyBordController from './keybord-controller';
+import DebugController from './debug-controller';
+
 
 var red = 0xf40404;
 var blue = 0x87ceeb;
@@ -21,6 +23,7 @@ export default class App {
         this.entytis = [];
         this.animations = {};
         this.keyBordController = new keyBordController();
+        this.DebugController = new DebugController();
         this.store = new Store();
     }
     
@@ -36,6 +39,8 @@ export default class App {
         cameraControl.setPosition(0,20,30);
         
         this.setupDebug();
+        this.DebugController.showStatus();
+        this.DebugController.createPanel();
         this.setupTerrain();
         // this.setupSky();
         this.createLight();
@@ -79,6 +84,10 @@ export default class App {
             renderer.render( scene, camera );
         };
 
+        let updateAplicationState = () => {
+            this.DebugController.update();
+        }
+
         var lastSecod = null;
         
         let animate = function animate(t) {
@@ -96,6 +105,7 @@ export default class App {
 
             lastSecod = t;
             requestAnimationFrame( animate );
+            updateAplicationState();
             render();
 
         }

@@ -11,10 +11,10 @@ export default class Store {
         this.player = {
             name: "player",
             loaderType: "fbx",
-            // fileName: "mremireh_o_desbiens.fbx",
-            // filePath: "models/",
-            fileName: "Witch.fbx",
-            filePath: "models/characters/FBX/",
+            // fileName: "Witch.fbx",
+            // filePath: "models/characters/quaternius/small-black/FBX/",
+            fileName: "default-male.fbx",
+            filePath: "models/characters/mixamo/",
             // position: {},
             scale:0.015,
             moveable: true,
@@ -102,18 +102,18 @@ export default class Store {
             animations: [
                 {
                     name: "walk",
-                    _self: 7
-                    // fileName: "walk.fbx",
-                    // filePath: "models/animations/",
-                    // loaderType: "fbx"
+                    // _self: 7
+                    fileName: "walking.fbx",
+                    filePath: "models/animations/",
+                    loaderType: "fbx"
                 },
-                {
-                    name: "punch",
-                    _self: 10
+                // {
+                    // name: "punch",
+                    // _self: 10
                     // fileName: "walk.fbx",
                     // filePath: "models/animations/",
                     // loaderType: "fbx"
-                }
+                // }
             ]
         }
 

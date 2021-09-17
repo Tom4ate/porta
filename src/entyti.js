@@ -38,7 +38,7 @@ export default class Entyti {
                     left: false,
                     right: false,
                     speedVector: new THREE.Vector3(0,0,0),
-                    walkAceleretion: new THREE.Vector3(1, 0.25, 50),
+                    walkAceleretion: new THREE.Vector3(1, 0.25, 7.5),
                     runAceleretion: new THREE.Vector3(0,2,0),
                     vectorsList: [],
                 }
@@ -135,6 +135,8 @@ export default class Entyti {
             for (let index = 0; index < this.animationList.length; index++) {
                 var animation = this.animationList[index];
 
+                console.log(animation._self);
+                
                 if(animation._self !== undefined) {
                     
                     let animationAction = mixer.clipAction( mesh.animations[animation._self] );

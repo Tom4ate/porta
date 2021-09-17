@@ -4,8 +4,7 @@ tasks:
     before: npm init -y && npm install webpack webpack-cli webpack-dev-server --save-dev && npm install && exit
     command: npx webpack server 
   - name: installtree
-  # - name: webpackcopile
-  #   command: npx webpack && exit
-  # - name: DB Server
-    # command: sh ./scripts/start-db.sh
-    # openMode: split-right
+
+ports:
+  - port: 9000
+    onOpen: 
