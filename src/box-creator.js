@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export default class boxCreator {
+export default class addBasicBox {
 
     constructor(app) {
         this.renderer = null;
@@ -52,17 +52,17 @@ export default class boxCreator {
         var material = new THREE.MeshBasicMaterial(options);
         var mesh = new THREE.Mesh( geometry, material );	
 
-        // if	(x === 0 || x) {
-        //     mesh.position.x = x;
-        // }
+        if	(x === 0 || x) {
+            mesh.position.x = x;
+        }
         
-        // if	(y === 0 || y) {
-        //     mesh.position.y = y;
-        // }
+        if	(y === 0 || y) {
+            mesh.position.y = y;
+        }
 
-        // if	(z === 0 || z) {
-        //     mesh.position.z = z;
-        // }
+        if	(z === 0 || z) {
+            mesh.position.z = z;
+        }
 
         if(options.color) {
             material.color.set(options.color)

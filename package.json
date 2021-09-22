@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "fs": "0.0.1-security",
+    "random": "^3.0.6",
     "three": "^0.132.0"
   },
   "main": "webpack.config.js",
