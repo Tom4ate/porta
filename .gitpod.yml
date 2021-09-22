@@ -4,7 +4,3 @@ tasks:
     before: npm init -y && npm install webpack webpack-cli webpack-dev-server --save-dev && npm install && exit
     command: npx webpack server 
   - name: installtree
-
-ports:
-  - port: 9000
-    onOpen: 
