@@ -4,6 +4,7 @@ import Store from './store';
 import BoxCreator from './box-creator';
 import keyBordController from './keybord-controller';
 import DebugController from './debug-controller';
+import { RGBA_ASTC_10x10_Format } from 'three';
 // import random from 'random';
 
 var random = "5989918863381571554477504529439655503584849154275643705890518936657100983345758816638191241769265275445107298158478302564267273248114975764702132989345881437772895892899853121277922096894558427";
@@ -68,6 +69,7 @@ export default class App {
     }
 
     createNoisedBox() {
+    
         let image = [];
         let width = 40;
         let height = 40;
@@ -85,16 +87,12 @@ export default class App {
             let hm = Math.abs(h);
             let sm = 20 * getRand();
 
-            console.log(getRand());
-
             // console.log("i",w,h,{r:sm,g:sm,b:sm});
 
             return [sm ,sm ,sm ];
         }
 
         let normalization = 2;
-        
-        console.log(parseInt(width / 2));
 
         let halfW = (width/2 == 0) ? width / 2 : parseInt(width / 2) + 1 ;
         let halfH = (height/2 == 0) ? height / 2 : parseInt(height / 2) + 1 ;
