@@ -1,6 +1,4 @@
 
 tasks:
-  - name: start
-    before: npm init -y && npm install webpack webpack-cli webpack-dev-server --save-dev && npm install && exit
+  - init: npm init -y && npm install webpack webpack-cli webpack-dev-server --save-dev && npm install && exit
     command: npx webpack server 
-  - name: installtree

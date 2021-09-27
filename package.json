@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/Tom4ate/porta#readme",
   "devDependencies": {
-    "webpack": "^5.53.0",
+    "webpack": "^5.54.0",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.2.1"
+    "webpack-dev-server": "^4.3.0"
   },
   "dependencies": {
     "fs": "0.0.1-security",
