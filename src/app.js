@@ -7,14 +7,6 @@ import DebugController from './debug-controller';
 import { RGBA_ASTC_10x10_Format } from 'three';
 // import random from 'random';
 
-var random = "5989918863381571554477504529439655503584849154275643705890518936657100983345758816638191241769265275445107298158478302564267273248114975764702132989345881437772895892899853121277922096894558427";
-var randomIndex = 0;
-var getRand = () => {
-    let v = random[randomIndex];
-    randomIndex = randomIndex + 1 > random.length ? 0 : randomIndex + 1 ;
-
-    return Number.isNaN( parseInt(v)) ? getRand() : parseInt(v) ;
-}
  
 var red = 0xf40404;
 var blue = 0x87ceeb;
@@ -69,90 +61,32 @@ export default class App {
     }
 
     createNoisedBox() {
-    
-        let image = [];
-        let width = 40;
-        let height = 40;
-        let y = - 0.1;
-        let size = 0.1;
-        let s = 1;
-        let boxCreator = new BoxCreator(this);
 
-        let colors = [
-            red, blue, green
-        ];
+        var terrainShape = new THREE.Shape();
 
-        var getInitValue = (w,h) => {
-            let wm = Math.abs(w);
-            let hm = Math.abs(h);
-            let sm = 20 * getRand();
+        terrainShape.moveTo( 0,  0 );
 
-            // console.log("i",w,h,{r:sm,g:sm,b:sm});
+        // terrainShape.bezierCurveTo( 1,  1, 1, 0, 0, 0 );
 
-            return [sm ,sm ,sm ];
-        }
-
-        let normalization = 2;
-
-        let halfW = (width/2 == 0) ? width / 2 : parseInt(width / 2) + 1 ;
-        let halfH = (height/2 == 0) ? height / 2 : parseInt(height / 2) + 1 ;
+        console.log(terrainShape);
         
-        for (let w = halfW - width ; w < halfW; w++) {
-            image[w] = [];
-            
-            for (let h = halfH - height; h < halfH; h++) {
-                image[w][h] = {
-                    w,h,
-                    x: w * s,
-                    z: h * s,
-                    // xy: w+" "+h,
-                    value: getInitValue(w,h),
-                };
-
-                // console.log(image[w][h])
-
-                let box = boxCreator.addBasicBox(
-                    size * 0.1,
-                    size * 10,
-                    size * 10,
-                    image[w][h].x,
-                    y ,
-                    image[w][h].z,
-                    // { color: image[w][h].value
-                    { color: "rgb("+image[w][h].value[0]+", "+image[w][h].value[1]+", "+image[w][h].value[2]+")"
-                });
-
-                this.addToMap(box,"box");
-                // console.log("box",box)
-                // console.log(w * s,y ,h * s);
-                image[w][h].mesh = box;
-            }
-            // console.log(image[w]);
-        }
-
-        console.log(image)
+        var geometry = new THREE.ShapeGeometry( terrainShape );
+        var material = new THREE.MeshBasicMaterial({
+            color: red,
+            // side: THREE.FrontSide,
+            // vertexColors: THREE.VertexColors,
+        });
+        var terrain = new THREE.Mesh( geometry, material );	
         
-        // for (let t = 0; t < normalization; t++) {
-        //     for (let x = 0; x < image.length; x++) {
-        //         for (let y = 0; y < image[x].length; y++) {
-        //             let box = image[x][y].mesh;
-        //             let color = image[x][y].value;
+        terrain.receiveShadow = true;
+        terrain.position.add({x: 0, y: 0, z:0 });
+        terrain.geometry.rotateX(Math.PI / -2)
 
-        //             // image[x][y].value = normalizationFunction(image[x][y].value);
-
-        //             box.material.color.set(
-        //                 // image[x][y].value
-        //                 "rgb("+image[x][y].value[0]+", "+image[x][y].value[1]+", "+image[x][y].value[2]+")"
-        //             );
-        //         }
-                
-        //     }
-            
-        // }
-        // console.log(image);
+        console.log("terrain",terrain)
         
+        this.addToMap( terrain, "planes" );
     }
-    
+
     loadPlayer () {
         var player = this.store.getPlayer();
 

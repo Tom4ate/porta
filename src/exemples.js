@@ -100,5 +100,37 @@ export default class ExamplesNotUsed {
         
     }
     
+    createRawShape() {
+        var verticesOfCube = [
+            -1,-1,-1,    1,-1,-1,    1, 1,-1,    -1, 1,-1,
+            -1,-1, 1,    1,-1, 1,    1, 1, 1,    -1, 1, 1,
+        ];
+        
+        var indicesOfFaces = [
+            2,1,0,    0,3,2,
+            0,4,7,    7,3,0,
+            0,1,5,    5,4,0,
+            1,2,6,    6,5,1,
+            2,3,7,    7,6,2,
+            4,5,6,    6,7,4
+        ];
+        
+        let mapaData = this.store.getMap();
+        var geometry = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 4, 2 );
+        var material = new THREE.MeshBasicMaterial({
+            color: mapaData.color,
+            // side: THREE.FrontSide,
+            // vertexColors: THREE.VertexColors,
+        });
+        var terrain = new THREE.Mesh( geometry, material );	
+        
+        terrain.receiveShadow = true;
+        terrain.position.add({x: 0, y: 0, z:0 });
+        terrain.geometry.rotateX(Math.PI / -2)
 
+        console.log("terrain",terrain)
+        
+        this.addToMap( terrain, "planes" );
+    }
+    
 }
