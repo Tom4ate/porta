@@ -130,4 +130,56 @@ export default class DebugController {
         }
     }
     
+    createXYZLines() {
+
+        // criam as linhas alciliares 
+        // let boxCreator = new BoxCreator(this);
+
+        // let y = boxCreator.addBasicBox(100,0.01,0.01,null,null,null,{ color: red }); // y
+        // let x = boxCreator.addBasicBox(0.01,100,0.01,null,null,null,{ color: green }); // x
+        // let z = boxCreator.addBasicBox(0.01,0.01,100,null,null,null,{ color: blue }); // y
+
+        // this.addToMap(y,"box");
+        // this.addToMap(x,"box");
+        // this.addToMap(z,"box");
+
+        // y.material.visible = false;
+        // x.material.visible = false;
+        // z.material.visible = false;
+        
+        // this.wireframe = false;
+        // this.visibleDebug = false;
+        // this.debugAxis = { x, y, z }; 
+
+        // this.keyBordController.addEvent("keydown",{key: 'z'},()=>{
+        //     let keys = Object.keys(this.objectsRendered);
+        //     let value = !this.wireframe;
+        //     this.wireframe = !this.wireframe;
+
+        //     for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+        //         let key = keys[keyIndex];
+                
+        //         for (let index = 0; index < this.objectsRendered[key].length; index++) {
+        //             let element = this.objectsRendered[key][index];
+
+        //             if(element.material) {
+        //                 element.material.wireframe = value;
+        //             // } else if (element.type = "Group") {
+        //             //     console.log(element);
+        //             }
+        //         }
+        //     }
+        // })
+
+        // this.keyBordController.addEvent("keydown",{key: 'x'},() => {
+        //     let keys = Object.keys(this.debugAxis);
+        //     let value = !this.visibleDebug;
+        //     this.visibleDebug = !this.visibleDebug;
+
+        //     for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+                
+        //         this.debugAxis[keys[keyIndex]].material.visible = value;
+        //     }
+        // })
+    }
 }

@@ -2,13 +2,13 @@ import * as THREE from 'three';
 
 // gltf
 
-import { GLTFLoader } from './utils/jsm/loaders/GLTFLoader.js';
-import { RGBELoader } from './utils/jsm/loaders/RGBELoader.js';
-import { RoughnessMipmapper } from './utils/jsm/utils/RoughnessMipmapper.js';
+import { GLTFLoader } from '../utils/jsm/loaders/GLTFLoader.js';
+import { RGBELoader } from '../utils/jsm/loaders/RGBELoader.js';
+import { RoughnessMipmapper } from '../utils/jsm/utils/RoughnessMipmapper.js';
 
 // fbx
 
-import { FBXLoader } from './utils/jsm/loaders/FBXLoader.js';
+import { FBXLoader } from 'porta/utils/jsm/loaders/FBXLoader.js';
 
 export default class Entyti {
     constructor ({ name, loaderType, fileName, filePath, scale, actions, position, rotation, moveable, rotationSpeed, animated, animations }) {

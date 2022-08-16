@@ -4,10 +4,9 @@ import Store from './store';
 import BoxCreator from './box-creator';
 import keyBordController from './keybord-controller';
 import DebugController from './debug-controller';
-import { RGBA_ASTC_10x10_Format } from 'three';
+// import { RGBA_ASTC_10x10_Format } from 'three';
 // import random from 'random';
 
- 
 var red = 0xf40404;
 var blue = 0x87ceeb;
 var green = 0x4f41b;
@@ -16,7 +15,9 @@ const clock = new THREE.Clock();
 
 export default class App {
 
-    constructor(){
+    constructor({ env } = {}){
+        this.env = env ?? "dev";
+        this.devMode = this.env === "dev";
         this.camera = null;
         this.scene = null;
         this.renderer = null;
@@ -24,83 +25,63 @@ export default class App {
         this.mixers = [];
         this.entytis = [];
         this.animations = {};
-        this.keyBordController = new keyBordController();
-        this.DebugController = new DebugController();
-        this.store = new Store();
+        this.keyBordController = new keyBordController(this);
+        this.DebugController = new DebugController(this);
+        this.store = new Store(this);
     }
-    
+
     main() {
         console.log("iniciamos o app.",this);
-        
+
         // start 3d start scene
         this.createScene();
+        this.startInitialCamera();
 
-        var cameraControl = new CameraController( this );
-        cameraControl.setMode("orbit");
-        // cameraControl.setMode("keysControl");
-        cameraControl.setPosition(0,20,30);
-        
-        this.setupDebug();
-        this.DebugController.showStatus();
-        this.DebugController.createPanel();
-        // this.setupTerrain();
-        this.createNoisedBox();
-        // this.setupSky();
-        this.createLight();
-        // end 3d scene
-        
+        // for debbugin
+        if(this.devMode) {
+            this.setupDebug();
+        }
+
         // first render
         this.render();
 
         // load game content
-        // this.loadPlayer();
         this.loadEntytis();
 
         // start game loop
         this.animate();
+       
     }
 
-    createNoisedBox() {
-
-        var terrainShape = new THREE.Shape();
-
-        terrainShape.moveTo( 0,  0 );
-
-        // terrainShape.bezierCurveTo( 1,  1, 1, 0, 0, 0 );
-
-        console.log(terrainShape);
-        
-        var geometry = new THREE.ShapeGeometry( terrainShape );
-        var material = new THREE.MeshBasicMaterial({
-            color: red,
-            // side: THREE.FrontSide,
-            // vertexColors: THREE.VertexColors,
-        });
-        var terrain = new THREE.Mesh( geometry, material );	
-        
-        terrain.receiveShadow = true;
-        terrain.position.add({x: 0, y: 0, z:0 });
-        terrain.geometry.rotateX(Math.PI / -2)
-
-        console.log("terrain",terrain)
-        
-        this.addToMap( terrain, "planes" );
+    startInitialCamera() {
+        var cameraControl = new CameraController( this );
+        cameraControl.setMode("orbit");
+        // cameraControl.setMode("keysControl");
+        cameraControl.setPosition(0,20,30);
     }
 
-    loadPlayer () {
-        var player = this.store.getPlayer();
-
-        player.load( this );
+    render(){
+        this.renderer.render( this.scene, this.camera );
     }
-    
+
     loadEntytis(){
         var entytis = this.store.getEntytis();
+
+        console.log("entytis",entytis);
 
         for (let index = 0; index < entytis.length; index++) {
             var entyti = entytis[index];
 
             entyti.load(this);
         }
+
+        // this.setupTerrain();
+        // this.createNoisedBox();
+        // this.setupSky();
+        // this.createLight();
+        // end 3d scene
+        // var player = this.store.getPlayer();
+        // player.load( this );
     }
 
     animate() {
@@ -144,55 +125,10 @@ export default class App {
     }
 
     setupDebug(){
-
-        let boxCreator = new BoxCreator(this);
-
-        let y = boxCreator.addBasicBox(100,0.01,0.01,null,null,null,{ color: red }); // y
-        let x = boxCreator.addBasicBox(0.01,100,0.01,null,null,null,{ color: green }); // x
-        let z = boxCreator.addBasicBox(0.01,0.01,100,null,null,null,{ color: blue }); // y
-
-        this.addToMap(y,"box");
-        this.addToMap(x,"box");
-        this.addToMap(z,"box");
-
-        y.material.visible = false;
-        x.material.visible = false;
-        z.material.visible = false;
-        
-        this.wireframe = false;
-        this.visibleDebug = false;
-        this.debugAxis = { x, y, z }; 
-
-        this.keyBordController.addEvent("keydown",{key: 'z'},()=>{
-            let keys = Object.keys(this.objectsRendered);
-            let value = !this.wireframe;
-            this.wireframe = !this.wireframe;
-
-            for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
-                let key = keys[keyIndex];
-                
-                for (let index = 0; index < this.objectsRendered[key].length; index++) {
-                    let element = this.objectsRendered[key][index];
-
-                    if(element.material) {
-                        element.material.wireframe = value;
-                    // } else if (element.type = "Group") {
-                    //     console.log(element);
-                    }
-                }
-            }
-        })
-
-        this.keyBordController.addEvent("keydown",{key: 'x'},() => {
-            let keys = Object.keys(this.debugAxis);
-            let value = !this.visibleDebug;
-            this.visibleDebug = !this.visibleDebug;
-
-            for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
-                
-                this.debugAxis[keys[keyIndex]].material.visible = value;
-            }
-        })
+        // inicia o painel
+        this.DebugController.showStatus();
+        this.DebugController.createPanel();
+        this.DebugController.createXYZLines();
     }
 
     setupTerrain() {
@@ -256,10 +192,6 @@ export default class App {
         }
         
         this.mixers.push(mixer);
-    }
-
-    render(){
-        this.renderer.render( this.scene, this.camera );
     }
 
     createScene() {
