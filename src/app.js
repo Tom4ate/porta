@@ -131,31 +131,6 @@ export default class App {
         this.DebugController.createXYZLines();
     }
 
-    setupTerrain() {
-                
-        // start terrain
-        // this.addBasicBox(0,1,1,0,0,0);
-
-        let mapaData = this.store.getMap();
-
-        var x = mapaData.width;
-        var y = mapaData.height;
-
-        var geometry = new THREE.PlaneGeometry(x,y,5,5);
-        var material = new THREE.MeshBasicMaterial({
-            color: mapaData.color,
-            // side: THREE.FrontSide,
-            // vertexColors: THREE.VertexColors,
-        });
-        var terrain = new THREE.Mesh( geometry, material );	
-        terrain.receiveShadow = true;
-        terrain.position.add({x: 0, y: 0, z:0 });
-        terrain.geometry.rotateX(Math.PI / -2)
-        
-        this.addToMap( terrain, "planes" );
-
-    }
-
     addToMap( mesh , type = "others") {
         this.scene.add( mesh );
 

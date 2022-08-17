@@ -2,16 +2,17 @@ import * as THREE from 'three';
 
 // gltf
 
-import { GLTFLoader } from '../utils/jsm/loaders/GLTFLoader.js';
-import { RGBELoader } from '../utils/jsm/loaders/RGBELoader.js';
-import { RoughnessMipmapper } from '../utils/jsm/utils/RoughnessMipmapper.js';
+// import { GLTFLoader } from '../utils/jsm/loaders/GLTFLoader.js';
+// import { RGBELoader } from '../utils/jsm/loaders/RGBELoader.js';
+// import { RoughnessMipmapper } from '../utils/jsm/utils/RoughnessMipmapper.js';
 
 // fbx
 
-import { FBXLoader } from 'porta/utils/jsm/loaders/FBXLoader.js';
+import { FBXLoader } from '../utils/jsm/loaders/FBXLoader.js';
 
 export default class Entyti {
-    constructor ({ name, loaderType, fileName, filePath, scale, actions, position, rotation, moveable, rotationSpeed, animated, animations }) {
+    constructor (app, { name, loaderType, fileName, filePath, scale, actions, position, rotation, moveable, rotationSpeed, animated, animations }) {
+        this.app = app;
         this.name = name;
         this.mesh = null;
         this.loaderType = loaderType;
@@ -95,6 +96,10 @@ export default class Entyti {
         }
         
         app.addEntyti( this );
+    }
+
+    addToScene( item ) {
+        this.app.scene.add( item );
     }
 
     onLoadFile(mesh,app) {
@@ -271,43 +276,50 @@ export default class Entyti {
             this.stateMachine.movement.front = true;
         }
     }
+
     walkBackwards(){ 
         if(this.moveable) {
             this.stateMachine.movement.back = true;
         }
     }
+
     turnLeft(){ 
         if(this.moveable) {
             this.stateMachine.movement.left = true;
         }
     }
+
     turnRight(){ 
         if(this.moveable) {
             this.stateMachine.movement.right = true;
         }
     }
+
     stopFowerd(){ 
         if(this.moveable) {
             this.animations.walk.stop()
             this.stateMachine.movement.front = false;
         }
     }
+
     stopBackwards(){ 
         if(this.moveable) {
             this.stateMachine.movement.back = false;
         }
     }
+
     stopTurnLeft(){ 
         if(this.moveable) {
             this.stateMachine.movement.left = false;
         }
     }
+
     stopTurnRight(){ 
         if(this.moveable) {
             this.stateMachine.movement.right = false;
         }
     }
-    
+
     punch() {
         // this.animations.punch.play()
     }
