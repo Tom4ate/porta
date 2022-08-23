@@ -73,15 +73,12 @@ export default class App {
             var entyti = entytis[index];
 
             entyti.load(this);
+
+            if(this.devMode) {
+                entyti.loadInspecor(this);
+            }
         }
 
-        // this.setupTerrain();
-        // this.createNoisedBox();
-        // this.setupSky();
-        // this.createLight();
-        // end 3d scene
-        // var player = this.store.getPlayer();
-        // player.load( this );
     }
 
     animate() {

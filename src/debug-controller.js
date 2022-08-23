@@ -9,56 +9,53 @@ import { GUI } from './utils/jsm/libs/dat.gui.module.js';
 export default class DebugController {
     constructor() {
         this.stats = null;
+        this.baseInspector = null;
+        this.currentPanel = null;
     }
 
     createPanel() {
+        this.baseInspector = {
+            panel: this.makeBasePanel(),
+            settings: {}
+        }
+        this.currentPanel = this.baseInspector;
 
-        const panel = new GUI( { width: 310 } );
-
-        // const folder1 = panel.addFolder( 'Visibility' );
+        const folder1 = this.baseInspector.panel.addFolder( 'Entitys' );
         // const folder2 = panel.addFolder( 'Activation/Deactivation' );
         // const folder3 = panel.addFolder( 'Pausing/Stepping' );
         // const folder4 = panel.addFolder( 'Crossfading' );
         // const folder5 = panel.addFolder( 'Blend Weights' );
         // const folder6 = panel.addFolder( 'General Speed' );
 
-        // settings = {
-        //     'show model': true,
-        //     'show skeleton': false,
-        //     'deactivate all': deactivateAllActions,
-        //     'activate all': activateAllActions,
-        //     'pause/continue': pauseContinue,
-        //     'make single step': toSingleStepMode,
-        //     'modify step size': 0.05,
-        //     'from walk to idle': function () {
+        let settings = {
+            // 'show model': true,
+            // 'show skeleton': false,
+            // 'deactivate all': deactivateAllActions,
+            // 'activate all': activateAllActions,
+            // 'pause/continue': pauseContinue,
+            // 'make single step': toSingleStepMode,
+            // 'modify step size': 0.05,
+            // 'from walk to idle': function () {
+            //     prepareCrossFade( walkAction, idleAction, 1.0 );
+            // },
+            // 'from idle to walk': function () {
+            //     prepareCrossFade( idleAction, walkAction, 0.5 );
+            // },
+            // 'from walk to run': function () {
+            //     prepareCrossFade( walkAction, runAction, 2.5 );
+            // },
+            // 'from run to walk': function () {
+            //     prepareCrossFade( runAction, walkAction, 5.0 );
+            // },
+            // 'use default duration': true,
+            // 'set custom duration': 3.5,
+            // 'modify idle weight': 0.0,
+            // 'modify walk weight': 1.0,
+            // 'modify run weight': 0.0,
+            // 'modify time scale': 1.0
+        };
 
-        //         prepareCrossFade( walkAction, idleAction, 1.0 );
-
-        //     },
-        //     'from idle to walk': function () {
-
-        //         prepareCrossFade( idleAction, walkAction, 0.5 );
-
-        //     },
-        //     'from walk to run': function () {
-
-        //         prepareCrossFade( walkAction, runAction, 2.5 );
-
-        //     },
-        //     'from run to walk': function () {
-
-        //         prepareCrossFade( runAction, walkAction, 5.0 );
-
-        //     },
-        //     'use default duration': true,
-        //     'set custom duration': 3.5,
-        //     'modify idle weight': 0.0,
-        //     'modify walk weight': 1.0,
-        //     'modify run weight': 0.0,
-        //     'modify time scale': 1.0
-        // };
-
-        // folder1.add( settings, 'show model' ).onChange( showModel );
+        // folder1.add( settings, 'show model' ).onChange( () => {console.log("acontece")} );
         // folder1.add( settings, 'show skeleton' ).onChange( showSkeleton );
         // folder2.add( settings, 'deactivate all' );
         // folder2.add( settings, 'activate all' );
@@ -115,6 +112,31 @@ export default class DebugController {
         //     };
 
         // } );
+
+    }
+
+    makeBasePanel(config = {}) {
+        let options = {
+            ...config,
+            width: 310
+        };
+
+        let panel = new GUI( options );
+        
+        return panel;
+    }
+
+    addPanel({ entyti, panelConfig }) {
+        let panel = this.makeBasePanel();
+        
+        this.addInBasePanel({entyti,panel});
+
+        // for (let folder in panelConfig) {
+        //     let folderValue = panelConfig[type];
+        // }
+    }
+
+    addInBasePanel() {
 
     }
 
