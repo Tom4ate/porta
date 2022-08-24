@@ -14,6 +14,16 @@ export default class Player extends Entyti {
 
         return super(app,baseObject);            
     }
+
+    // Debug panel config
+    getPanelConfig() {
+        return {
+            "Show Position": () => {
+                console.log("Ações do player",this);
+            }
+        };
+    }
+
     
     // default animations
     // getAnimations() {}

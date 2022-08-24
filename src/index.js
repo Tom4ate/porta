@@ -1,5 +1,5 @@
 // import App from './app.js';
-var App = require("./app.js");
-var instance = new App.default;
+const App = require("./app.js");
+const instance = new App.default;
 
 instance.main();

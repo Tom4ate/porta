@@ -29,7 +29,7 @@ export default class Entyti {
         this.animationList = animations;
         this.animations = {};
         this.mixer = null;
-        this.panel = null;
+        this.folders = null;
         
         if  (this.moveable) {
             this.stateMachine = {
@@ -99,9 +99,9 @@ export default class Entyti {
         app.addEntyti( this );
     }
 
-    loadPanel(app) {
+    addToPanel(app) {
         let panelConfig = this.getPanelConfig();
-        app.DebugController.addPanel({ entyti: this, panelConfig });
+        app.DebugController.addEntyti({ entyti: this, panelConfig });
     }
 
     getPanelConfig() {
@@ -109,8 +109,6 @@ export default class Entyti {
             transform: true
         };
     }
-    
-    loadInspecor() {}
 
     addToScene( item ) {
         this.app.scene.add( item );

@@ -75,7 +75,7 @@ export default class App {
             entyti.load(this);
 
             if(this.devMode) {
-                entyti.loadInspecor(this);
+                entyti.addToPanel(this);
             }
         }
 
