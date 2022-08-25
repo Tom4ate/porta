@@ -52,7 +52,7 @@ export default class Store {
     }
     
     getPlayer() {
-        return new Entyti(this.player);
+        return this.entytis["player"][0];
     }
     
     getEntytis() {

@@ -27,6 +27,7 @@ export default class App {
         this.animations = {};
         this.keyBordController = new keyBordController(this);
         this.DebugController = new DebugController(this);
+        this.cameraControl = null;
         this.store = new Store(this);
     }
 
@@ -54,10 +55,12 @@ export default class App {
     }
 
     startInitialCamera() {
-        var cameraControl = new CameraController( this );
+        let cameraControl = new CameraController( this );
         cameraControl.setMode("orbit");
-        // cameraControl.setMode("keysControl");
+        cameraControl.setMode("playerFollow");
         cameraControl.setPosition(0,20,30);
+
+        this.cameraControl = cameraControl;
     }
 
     render(){
@@ -94,6 +97,7 @@ export default class App {
 
         let updateAplicationState = () => {
             this.DebugController.update();
+            this.cameraControl.update();
         }
 
         var lastSecod = null;

@@ -2,103 +2,114 @@ import * as THREE from 'three';
 import { OrbitControls } from './utils/jsm/controls/OrbitControls';
 
 export default class CameraControl {
-    constructor(camera,render) {
-        this._Initialize(camera,render);
-    }
-
-    _Initialize(app) {
+    constructor(app) {
         this.app = app;
         this.camera = app.camera;
         this.render = app.render;
         this.mode = "none";
-        this.speed = 0.1;
+        this.controls = null;
+        this.target = null;
+        this.currentPosition = new THREE.Vector3();
+        this.currentLookat = new THREE.Vector3();
     }
 
-    setupControl() {
-        // inicia os movimentos da camera 
-        let cMov = (index,incrice) => {
-            this.speed = 0.1;
-            let value = this.camera.position[index] ; 
-
-            if(incrice) {
-                value = value + this.speed;
-            } else {
-                value = value - this.speed;
-            }
-
-            this.camera.position[index] = parseFloat(value.toFixed(2));
+    update(timeElapsed) {
+        switch(this.mode) {
+            case "playerFollow":
+                this.updatePlayerCamera(timeElapsed);
+                break;
         }
-
-        let cRot = (index,incrice) => {
-            let speed = 0.1;
-            let value = this.camera.rotation[index] ; 
-
-            if(incrice) {
-                value = value + speed;
-            } else {
-                value = value - speed;
-            }
-
-            this.camera.rotation[index] = parseFloat(value.toFixed(2));
-        }
-        
-        document.addEventListener("keypress",(event) => {
-            console.log(event);
-
-            switch (event.key) {
-                case "w": cMov("z",false); break;
-                case "s": cMov("z",true); break;
-                case "a": cMov("x",false); break;
-                case "d": cMov("x",true); break;
-                case "q": cRot("y",true); break;
-                case "e": cRot("y",false); break;
-            }
-
-            this.app.render();
-        });
-
     }
-    
+
     setMode(mode) {
+        this.mode = mode;
+
         switch (mode) {
             case "orbit": 
-                this.mode = "orbit";
-                var app = this.app;
-                const controls = new OrbitControls(this.camera, this.app.renderer.domElement);
-                controls.target.set(0, 1, 0);
+                let controls = this.createOrbitControl(this.app.renderer.domElement);
+                console.log("controls",controls)
+                this.controls = controls;
                 
-                controls.listenToKeyEvents( window ); // optional
-                
-				controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-				controls.dampingFactor = 0.05;
-
-				controls.screenSpacePanning = false;
-
-				controls.minDistance = 0.1;
-				controls.maxDistance = 500;
-
-				controls.maxPolarAngle = Math.PI / 2;
-
-                controls.update();
-
-                function animate() {
-
-                    requestAnimationFrame( animate );
-    
-                    controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-    
-                    app.render();
-                }
-
-                animate();
-
                 break;
-            case "keysControl": 
-                this.setupControl();
+            case "playerFollow": 
+                this.createPlayerControll();
                 break;
         }
     }
 
+    createOrbitControl(domElement) {
+        let controls = new OrbitControls(this.camera, domElement);
+        controls.target.set(0, 1, 0);
+        
+        controls.listenToKeyEvents( window ); // optional
+        
+        controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+        controls.dampingFactor = 0.05;
+        
+        controls.screenSpacePanning = false;
+        
+        controls.minDistance = 0.1;
+        controls.maxDistance = 500;
+        
+        controls.maxPolarAngle = Math.PI / 2;
+        
+        controls.update();
+
+        // alredy animated on app
+        // function animate() {
+        //     requestAnimationFrame( animate );
+        //     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+        //     app.render();
+        // }
+        // animate();
+
+        return controls;
+    }
+
+    createPlayerControll() {
+        // atualiza a posição da camera
+        let player = this.app.store.getPlayer();
+        this.target = player;
+    }
+
+    updatePlayerCamera(timeElapsed) {
+        if(!this.target.position){ return; }
+        
+        let idealOffset = this.CalculateIdealOffset();
+        let idealLookat = this.CalculateIdealLookat();
+
+        // let t = 0.05;
+        // let t = 4.0 * timeElapsed;
+        let t = 1.0 - Math.pow(0.01, timeElapsed);
+
+        this.currentPosition.lerp(idealOffset, t);
+        this.currentLookat.lerp(idealLookat, t);
+
+        console.log("this.currentPosition",this.currentPosition)
+        console.log("this.currentLookat",this.currentLookat)
+
+        this.camera.position.copy(this.currentPosition);
+        this.camera.lookAt(this.currentLookat);
+    }
+    
+    CalculateIdealOffset() {
+        let idealOffset = new THREE.Vector3(-0, 10, -15);
+        idealOffset.applyQuaternion(this.target.rotation);
+        idealOffset.add(this.target.position);
+
+        // let terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
+        // idealOffset.y = Math.max(idealOffset.y, terrain.GetHeight(idealOffset)[0] + 5.0);
+
+        return idealOffset;
+    }
+
+    CalculateIdealLookat() {
+        let idealLookat = new THREE.Vector3(0, 5, 20);
+        idealLookat.applyQuaternion(this.target.rotation);
+        idealLookat.add(this.target.position);
+        return idealLookat;
+    }
+    
     setPosition(x,y,z) {
         this.camera.position.set( x,y,z );
     }
