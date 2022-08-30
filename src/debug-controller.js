@@ -8,10 +8,12 @@ import { GUI } from './utils/jsm/libs/dat.gui.module.js';
 var _next_id = 1;
 
 export default class DebugController {
-    constructor() {
+    constructor(app) {
+        this.app = app;
         this.stats = null;
         this.baseInspector = null;
         this.entytiFolder = null;
+        this.cameraFolder = null;
         this.activeFolders = [];
     }
 
@@ -29,10 +31,20 @@ export default class DebugController {
 
         this.baseInspector = {
             panel,
-            settings: {}
+            settings: {
+                "camera lookat step x" : 0.1,
+                "camera lookat step y" : 1,
+                "camera lookat step z" : 1,
+                "camera offset step x" : 1,
+                "camera offset step y" : 1,
+                "camera offset step z" : 1,
+            }
         }
-
-        const folder = this.baseInspector.panel.addFolder( 'Entitys' );
+        
+        const folderCamera = this.baseInspector.panel.addFolder( 'Player Camera' );
+        this.cameraFolder = folderCamera;
+        
+        const folder = this.baseInspector.panel.addFolder( 'All Entitys' );
         this.entytiFolder = folder;
 
     }

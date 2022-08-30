@@ -9,8 +9,10 @@ export default class CameraControl {
         this.mode = "none";
         this.controls = null;
         this.target = null;
-        this.currentPosition = new THREE.Vector3();
-        this.currentLookat = new THREE.Vector3();
+        this.currentPosition = new THREE.Vector3(0,0,0);
+        this.currentLookat = new THREE.Vector3(0,0,0);
+        this.idealOffset = {x: -0 ,y: 5 ,z: -10 }
+        this.idealLookat = {x: 0 ,y: 5 ,z: 20 }
     }
 
     update(timeElapsed) {
@@ -27,7 +29,6 @@ export default class CameraControl {
         switch (mode) {
             case "orbit": 
                 let controls = this.createOrbitControl(this.app.renderer.domElement);
-                console.log("controls",controls)
                 this.controls = controls;
                 
                 break;
@@ -77,24 +78,34 @@ export default class CameraControl {
         
         let idealOffset = this.CalculateIdealOffset();
         let idealLookat = this.CalculateIdealLookat();
-
+        
         // let t = 0.05;
         // let t = 4.0 * timeElapsed;
         let t = 1.0 - Math.pow(0.01, timeElapsed);
 
+        // console.log("Offset",{x:idealOffset.x,y:idealOffset.y,z:idealOffset.z});
+        // console.log("Lookat",{x:idealLookat.x,y:idealLookat.y,z:idealLookat.z});
+
+        // console.log({t,timeElapsed});
+        // console.log("this.currentPosition",{x:this.currentPosition.x,y:this.currentPosition.y,z:this.currentPosition.z})
+        // console.log("this.currentLookat",{x:this.currentLookat.x,y:this.currentLookat.y,z:this.currentLookat.z})
+
         this.currentPosition.lerp(idealOffset, t);
         this.currentLookat.lerp(idealLookat, t);
 
-        console.log("this.currentPosition",this.currentPosition)
-        console.log("this.currentLookat",this.currentLookat)
+        // console.log("this.currentPosition",this.currentPosition)
+        // console.log("this.currentLookat",this.currentLookat)
+
+        // console.log("this.currentPosition",{x:this.currentPosition.x,y:this.currentPosition.y,z:this.currentPosition.z})
+        // console.log("this.currentLookat",{x:this.currentLookat.x,y:this.currentLookat.y,z:this.currentLookat.z})
 
         this.camera.position.copy(this.currentPosition);
         this.camera.lookAt(this.currentLookat);
     }
     
     CalculateIdealOffset() {
-        let idealOffset = new THREE.Vector3(-0, 10, -15);
-        idealOffset.applyQuaternion(this.target.rotation);
+        let idealOffset = new THREE.Vector3(this.idealOffset.x, this.idealOffset.y, this.idealOffset.z);
+        idealOffset.applyQuaternion(this.target.quaternion);
         idealOffset.add(this.target.position);
 
         // let terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
@@ -104,14 +115,31 @@ export default class CameraControl {
     }
 
     CalculateIdealLookat() {
-        let idealLookat = new THREE.Vector3(0, 5, 20);
-        idealLookat.applyQuaternion(this.target.rotation);
+        let idealLookat = new THREE.Vector3(this.idealLookat.x, this.idealLookat.y, this.idealLookat.z);
+        idealLookat.applyQuaternion(this.target.quaternion);
         idealLookat.add(this.target.position);
         return idealLookat;
     }
     
     setPosition(x,y,z) {
         this.camera.position.set( x,y,z );
+    }
+
+    setUpDebugger() {
+        // folderCamera.add( this.baseInspector.settings, "camera lookat step x",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("lookat","x"));
+        // folderCamera.add( this.baseInspector.settings, "camera lookat step y",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("lookat","y"));
+        // folderCamera.add( this.baseInspector.settings, "camera lookat step z",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("lookat","z"));
+        // folderCamera.add( this.baseInspector.settings, "camera offset step x",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("offset","x"));
+        // folderCamera.add( this.baseInspector.settings, "camera offset step y",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("offset","y"));
+        // folderCamera.add( this.baseInspector.settings, "camera offset step z",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("offset","z"));
+    }
+    
+    setUpdater(type,axle) {
+        let prop = type === "lookat" ? "idealLookat" : "idealOffset" ;
+        
+        return (value) => {
+            this[prop][axle] = value;
+        }
     }
 
 }

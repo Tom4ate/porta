@@ -56,7 +56,7 @@ export default class App {
 
     startInitialCamera() {
         let cameraControl = new CameraController( this );
-        cameraControl.setMode("orbit");
+        // cameraControl.setMode("orbit");
         cameraControl.setMode("playerFollow");
         cameraControl.setPosition(0,20,30);
 
@@ -96,8 +96,8 @@ export default class App {
         };
 
         let updateAplicationState = () => {
-            this.DebugController.update();
-            this.cameraControl.update();
+            this.DebugController.update(lastSecod);
+            this.cameraControl.update(lastSecod);
         }
 
         var lastSecod = null;
@@ -117,7 +117,7 @@ export default class App {
 
             lastSecod = t;
             requestAnimationFrame( animate );
-            updateAplicationState();
+            updateAplicationState( lastSecod );
             render();
 
         }
