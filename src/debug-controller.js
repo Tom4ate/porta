@@ -14,7 +14,6 @@ export default class DebugController {
         this.baseInspector = null;
         this.entytiFolder = null;
         this.cameraFolder = null;
-        this.activeFolders = [];
     }
 
     getId() {

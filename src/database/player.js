@@ -98,13 +98,13 @@ export default function () {
                 filePath: "models/animations/",
                 loaderType: "fbx"
             },
-            // {
-            //     name: "idle",
-            //     // _self: 7
-            //     fileName: "Idle.fbx",
-            //     filePath: "models/animations/",
-            //     loaderType: "fbx"
-            // },
+            {
+                name: "idle",
+                // _self: 7
+                fileName: "happy_Idle.fbx",
+                filePath: "models/animations/",
+                loaderType: "fbx"
+            },
             // {
                 // name: "punch",
                 // _self: 10

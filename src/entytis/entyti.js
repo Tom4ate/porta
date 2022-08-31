@@ -284,6 +284,7 @@ export default class Entyti {
     walkFowerd(){ 
         if(this.moveable) {
             this.animations.walk.play()
+            // this.animations.idle.stop()
             this.stateMachine.movement.front = true;
         }
     }
