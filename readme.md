@@ -1,6 +1,6 @@
-# Foobar
+# Game?
 
-Foobar is a Python library for dealing with word pluralization.
+Uma tentativa de joginho
 
 ## Installation
 
