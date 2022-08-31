@@ -5,7 +5,7 @@ export default class Player extends Entyti {
     constructor(app,dataObject) {
         let baseObject = {
             ...dataObject,
-            scale:0.015,
+            scale:0.05,
             moveable: true,
             animated: true,
             rotation: new THREE.Euler(Math.PI / 2,Math.PI,0) ,

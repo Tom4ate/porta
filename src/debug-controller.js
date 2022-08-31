@@ -32,17 +32,12 @@ export default class DebugController {
         this.baseInspector = {
             panel,
             settings: {
-                "camera lookat step x" : 0.1,
-                "camera lookat step y" : 1,
-                "camera lookat step z" : 1,
-                "camera offset step x" : 1,
-                "camera offset step y" : 1,
-                "camera offset step z" : 1,
             }
         }
         
         const folderCamera = this.baseInspector.panel.addFolder( 'Player Camera' );
         this.cameraFolder = folderCamera;
+        this.app.cameraControl.setUpDebugger(this.cameraFolder);
         
         const folder = this.baseInspector.panel.addFolder( 'All Entitys' );
         this.entytiFolder = folder;

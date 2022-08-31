@@ -11,8 +11,8 @@ export default class CameraControl {
         this.target = null;
         this.currentPosition = new THREE.Vector3(0,0,0);
         this.currentLookat = new THREE.Vector3(0,0,0);
-        this.idealOffset = {x: -0 ,y: 5 ,z: -10 }
-        this.idealLookat = {x: 0 ,y: 5 ,z: 20 }
+        this.idealOffset = {x: -1.3 ,y: 5.07 ,z: -5.5 }
+        this.idealLookat = {x: -2.6 ,y: 5 ,z: 20 }
     }
 
     update(timeElapsed) {
@@ -125,13 +125,30 @@ export default class CameraControl {
         this.camera.position.set( x,y,z );
     }
 
-    setUpDebugger() {
-        // folderCamera.add( this.baseInspector.settings, "camera lookat step x",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("lookat","x"));
-        // folderCamera.add( this.baseInspector.settings, "camera lookat step y",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("lookat","y"));
-        // folderCamera.add( this.baseInspector.settings, "camera lookat step z",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("lookat","z"));
-        // folderCamera.add( this.baseInspector.settings, "camera offset step x",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("offset","x"));
-        // folderCamera.add( this.baseInspector.settings, "camera offset step y",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("offset","y"));
-        // folderCamera.add( this.baseInspector.settings, "camera offset step z",0.01, 10, 0.001).onChange(this.app.cameraController.setUpdater("offset","z"));
+    setUpDebugger(folder) {
+        let positionFolder = folder.addFolder("Position and direction");
+
+        let Ox = this.idealOffset.x;
+        let Oy = this.idealOffset.y;
+        let Oz = this.idealOffset.z;
+        let Lx = this.idealLookat.x;
+        let Ly = this.idealLookat.y;
+        let Lz = this.idealLookat.z;
+        
+        let settings = {
+            "offset step x" : Ox,
+            "offset step y" : Oy,
+            "offset step z" : Oz,
+            "lookat step x" : Lx,
+            "lookat step y" : Ly,
+            "lookat step z" : Lz,
+        }
+        positionFolder.add( settings, "offset step x",Ox - 20,Ox + 20, 0.001).onChange(this.setUpdater("offset","x"));
+        positionFolder.add( settings, "offset step y",Oy - 20,Oy + 20, 0.001).onChange(this.setUpdater("offset","y"));
+        positionFolder.add( settings, "offset step z",Oz - 20,Oz + 20, 0.001).onChange(this.setUpdater("offset","z"));
+        positionFolder.add( settings, "lookat step x",Lx - 20,Lx + 20, 0.001).onChange(this.setUpdater("lookat","x"));
+        positionFolder.add( settings, "lookat step y",Ly - 20,Ly + 20, 0.001).onChange(this.setUpdater("lookat","y"));
+        positionFolder.add( settings, "lookat step z",Lz - 20,Lz + 20, 0.001).onChange(this.setUpdater("lookat","z"));
     }
     
     setUpdater(type,axle) {

@@ -33,8 +33,9 @@ export default class Entyti {
         
         if  (this.moveable) {
             this.stateMachine = {
-                activeState: null,
+                activeState: "idle",
                 movement: {
+                    idle: true,
                     front: false,
                     back: false,
                     left: false,
@@ -55,8 +56,8 @@ export default class Entyti {
     load(app) {
 
         if(this.loaderType && this.fileName) {
-            var loader = null;    
-            var filePath = "";
+            let loader = null;    
+            let filePath = "";
             let onload = (mesh) => {
                 this.onLoadFile(mesh,app,this);
             }
@@ -150,9 +151,7 @@ export default class Entyti {
             this.mixer = mixer;
 
             for (let index = 0; index < this.animationList.length; index++) {
-                var animation = this.animationList[index];
-
-                console.log(animation._self);
+                let animation = this.animationList[index];
                 
                 if(animation._self !== undefined) {
                     
@@ -162,8 +161,8 @@ export default class Entyti {
                     
                 } else {
                 
-                    var filePath = null;
-                    var loader = null;
+                    let filePath = null;
+                    let loader = null;
     
                     switch(animation.loaderType) {
                         case "fbx":
@@ -209,10 +208,10 @@ export default class Entyti {
         // self movement 
         if(this.stateMachine && this.position) {
             
-            var speed = this.stateMachine.movement.speedVector;
-            var decceleration = this.decceleration;
+            let speed = this.stateMachine.movement.speedVector;
+            let decceleration = this.decceleration;
 
-            var frameDecceleration = new THREE.Vector3(
+            let frameDecceleration = new THREE.Vector3(
                 speed.x * decceleration.x,
                 speed.y * decceleration.y,
                 speed.z * decceleration.z
@@ -223,12 +222,12 @@ export default class Entyti {
 
             speed.add(frameDecceleration);
 
-            var _Q = new THREE.Quaternion();
-            var _A = new THREE.Vector3();
-            var _R = this.quaternion.clone();                    
+            let _Q = new THREE.Quaternion();
+            let _A = new THREE.Vector3();
+            let _R = this.quaternion.clone();                    
 
-            var walkAceleretion = this.stateMachine.movement.walkAceleretion;
-            var acc = walkAceleretion.clone();
+            let walkAceleretion = this.stateMachine.movement.walkAceleretion;
+            let acc = walkAceleretion.clone();
 
             // if (this._input._keys.shift) {
             //     acc.multiplyScalar(2.0);
@@ -310,6 +309,7 @@ export default class Entyti {
     stopFowerd(){ 
         if(this.moveable) {
             this.animations.walk.stop()
+            // this.animations.idle.play()
             this.stateMachine.movement.front = false;
         }
     }

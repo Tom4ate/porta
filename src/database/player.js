@@ -7,7 +7,15 @@ export default function () {
         // filePath: "models/characters/quaternius/small-black/FBX/",
         fileName: "default-male.fbx",
         filePath: "models/characters/mixamo/",
+        // fileName: "fa273852-aadd-49c3-9cc6-1bb2191b9166.glb",
+        // filePath: "models/characters/",
         actions: [
+            {
+                name: "idle",
+                keyControl: {
+                    function: "walkFowerd",
+                },
+            },
             {
                 name: "walkFowerd",
                 keyControl: {
@@ -90,6 +98,13 @@ export default function () {
                 filePath: "models/animations/",
                 loaderType: "fbx"
             },
+            // {
+            //     name: "idle",
+            //     // _self: 7
+            //     fileName: "Idle.fbx",
+            //     filePath: "models/animations/",
+            //     loaderType: "fbx"
+            // },
             // {
                 // name: "punch",
                 // _self: 10
