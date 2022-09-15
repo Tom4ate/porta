@@ -1,6 +1,6 @@
 export default function () {
     return {
-        entyti_type: "player",
+        entity_type: "player",
         name: "player",
         loaderType: "fbx",
         // fileName: "Witch.fbx",

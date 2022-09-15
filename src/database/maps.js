@@ -1,6 +1,6 @@
 export default function () {
     return {
-        entyti_type: 'base-map',
+        entity_type: 'base-map',
         active: true,
         name: "start",
         width: 200,

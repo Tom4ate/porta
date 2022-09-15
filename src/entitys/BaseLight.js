@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import Entyti from './entyti';
+import Entity from './entity';
 
-export default class BaseLight extends Entyti {
+export default class BaseLight extends Entity {
 
     constructor(app,dataObject) {
         super(app,dataObject);

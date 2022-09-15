@@ -23,7 +23,7 @@ export default class App {
         this.renderer = null;
         this.objectsRendered = {};
         this.mixers = [];
-        this.entytis = [];
+        this.entitys = [];
         this.animations = {};
         this.keyBordController = new keyBordController(this);
         this.DebugController = new DebugController(this);
@@ -47,7 +47,7 @@ export default class App {
         this.render();
 
         // load game content
-        this.loadEntytis();
+        this.loadEntitys();
 
         // start game loop
         this.animate();
@@ -67,18 +67,18 @@ export default class App {
         this.renderer.render( this.scene, this.camera );
     }
 
-    loadEntytis(){
-        var entytis = this.store.getEntytis();
+    loadEntitys(){
+        var entitys = this.store.getEntitys();
 
-        console.log("entytis",entytis);
+        console.log("entitys",entitys);
 
-        for (let index = 0; index < entytis.length; index++) {
-            var entyti = entytis[index];
+        for (let index = 0; index < entitys.length; index++) {
+            var entity = entitys[index];
 
-            entyti.load(this);
+            entity.load(this);
 
             if(this.devMode) {
-                entyti.addToPanel(this);
+                entity.addToPanel(this);
             }
         }
 
@@ -89,7 +89,7 @@ export default class App {
         let scene = this.scene;
         let camera = this.camera;
         let mixers = this.mixers;
-        let entytis = this.entytis;
+        let entitys = this.entitys;
                 
         let render = function render () {
             renderer.render( scene, camera );
@@ -106,12 +106,12 @@ export default class App {
 
             if(!lastSecod) { lastSecod = t};
 
-            if(entytis.length) {
+            if(entitys.length) {
 
                 let deltaSeconds = clock.getDelta();
                 let timeInSecods = (t - lastSecod) * 0.001;
 
-                entytis.map((item) => item._update(timeInSecods,deltaSeconds))
+                entitys.map((item) => item._update(timeInSecods,deltaSeconds))
                 
             }
 
@@ -146,8 +146,8 @@ export default class App {
         return this.objectsRendered[type].length - 1;
     }
 
-    addEntyti( entyti ) {
-        this.entytis.push( entyti );
+    addEntity( entity ) {
+        this.entitys.push( entity );
     }
 
     addAnimations(mesh,id,type = "others") {

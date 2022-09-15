@@ -1,7 +1,7 @@
-import Entyti from './entyti';
+import Entity from './entity';
 import * as THREE from 'three';
 
-export default class BaseMap extends Entyti {
+export default class BaseMap extends Entity {
 
     constructor(app,params) {
         super(app,params);

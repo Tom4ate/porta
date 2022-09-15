@@ -1,7 +1,7 @@
-import Entyti from './entytis/entyti';
-import Player from './entytis/player';
-import BaseLight from './entytis/BaseLight';
-import BaseMap from './entytis/BaseMap';
+import Entity from './entitys/entity';
+import Player from './entitys/player';
+import BaseLight from './entitys/BaseLight';
+import BaseMap from './entitys/BaseMap';
 import playerData from './database/player';
 import mapsData from './database/maps';
 import lightsData from './database/lights';
@@ -17,7 +17,7 @@ export default class Store {
     constructor(app) {
         // this.player = {}
         // this.map = {}
-        this.entytis = this.loadDatabase(app,{
+        this.entitys = this.loadDatabase(app,{
             player: playerData,
             maps: mapsData,
             lights: lightsData
@@ -35,11 +35,11 @@ export default class Store {
 
             if(data.length) {
                 for (let i = 0; i < data.length; i++) {
-                    let entyti = data[i];
-                    result[type].push(this.bootEntyti(app,entyti));
+                    let entity = data[i];
+                    result[type].push(this.bootEntity(app,entity));
                 }
             } else {
-                result[type].push(this.bootEntyti(app,data));
+                result[type].push(this.bootEntity(app,data));
             }
             
         }
@@ -52,24 +52,24 @@ export default class Store {
     }
     
     getPlayer() {
-        return this.entytis["player"][0];
+        return this.entitys["player"][0];
     }
     
-    getEntytis() {
-        let entytis = this.entytis;
+    getEntitys() {
+        let entitys = this.entitys;
         let responce = [];
 
-        for(let type in entytis) {
-            for (let i = 0; i < entytis[type].length; i++) {
-                responce.push(entytis[type][i])                
+        for(let type in entitys) {
+            for (let i = 0; i < entitys[type].length; i++) {
+                responce.push(entitys[type][i])                
             }
         }
 
         return responce;
     }
     
-    bootEntyti(app,data) {
-        switch(data.entyti_type) {
+    bootEntity(app,data) {
+        switch(data.entity_type) {
             case "player":
                 return new Player(app,data);
             case "ambient-light":
@@ -77,8 +77,8 @@ export default class Store {
             case "base-map":
                 return new BaseMap(app,data);
             default:
-                return new Entyti(app,data);
+                return new Entity(app,data);
         }
-        // new Entyti(entyti)
+        // new Entity(entity)
     }
 }

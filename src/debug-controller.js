@@ -12,7 +12,7 @@ export default class DebugController {
         this.app = app;
         this.stats = null;
         this.baseInspector = null;
-        this.entytiFolder = null;
+        this.entityFolder = null;
         this.cameraFolder = null;
     }
 
@@ -39,13 +39,13 @@ export default class DebugController {
         this.app.cameraControl.setUpDebugger(this.cameraFolder);
         
         const folder = this.baseInspector.panel.addFolder( 'All Entitys' );
-        this.entytiFolder = folder;
+        this.entityFolder = folder;
 
     }
 
-    addEntyti({ entyti, panelConfig }) {
-        let entytiName = entyti.name;
-        let folder = this.entytiFolder.addFolder( entytiName );
+    addEntity({ entity, panelConfig }) {
+        let entityName = entity.name;
+        let folder = this.entityFolder.addFolder( entityName );
         
         for (let name in panelConfig) {
             folder.add(panelConfig,name);
