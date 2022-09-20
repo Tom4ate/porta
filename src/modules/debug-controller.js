@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 
-import { OrbitControls } from './utils/jsm/controls/OrbitControls';
+import { OrbitControls } from '../utils/jsm/controls/OrbitControls';
 
-import Stats from './utils/jsm/libs/stats.module.js';
-import { GUI } from './utils/jsm/libs/dat.gui.module.js';
+import Stats from '../utils/jsm/libs/stats.module.js';
+import { GUI } from '../utils/jsm/libs/dat.gui.module.js';
 
 var _next_id = 1;
 

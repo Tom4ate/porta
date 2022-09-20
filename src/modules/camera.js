@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { OrbitControls } from './utils/jsm/controls/OrbitControls';
+import { OrbitControls } from '../utils/jsm/controls/OrbitControls';
+// import { PointerLockControls } from '../utils/jsm/controls/PointerLockControls.js';
 
 export default class CameraControl {
     constructor(app) {

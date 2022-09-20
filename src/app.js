@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import CameraController from './camera';
-import Store from './store';
-import BoxCreator from './box-creator';
-import keyBordController from './keybord-controller';
-import DebugController from './debug-controller';
+import CameraController from './modules/camera';
+import Store from './modules/store';
+import keyBordController from './modules/keybord-controller';
+import DebugController from './modules/debug-controller';
+// import BoxCreator from './box-creator';
 // import { RGBA_ASTC_10x10_Format } from 'three';
 // import random from 'random';
 

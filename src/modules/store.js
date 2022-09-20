@@ -1,10 +1,10 @@
-import Entity from './entitys/entity';
-import Player from './entitys/player';
-import BaseLight from './entitys/BaseLight';
-import BaseMap from './entitys/BaseMap';
-import playerData from './database/player';
-import mapsData from './database/maps';
-import lightsData from './database/lights';
+import Entity from '../entitys/entity';
+import Player from '../entitys/player';
+import BaseLight from '../entitys/BaseLight';
+import BaseMap from '../entitys/BaseMap';
+import playerData from '../database/player';
+import mapsData from '../database/maps';
+import lightsData from '../database/lights';
 import * as THREE from 'three';
 
 var red = 0xf40404;
