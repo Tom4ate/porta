@@ -3,6 +3,7 @@ import CameraController from './modules/camera';
 import Store from './modules/store';
 import keyBordController from './modules/keybord-controller';
 import DebugController from './modules/debug-controller';
+import inputSystem from './modules/input-system';
 // import BoxCreator from './box-creator';
 // import { RGBA_ASTC_10x10_Format } from 'three';
 // import random from 'random';
@@ -25,7 +26,7 @@ export default class App {
         this.mixers = [];
         this.entitys = [];
         this.animations = {};
-        this.keyBordController = new keyBordController(this);
+        this.inputSystem = new inputSystem(this);
         this.DebugController = new DebugController(this);
         this.cameraControl = null;
         this.store = new Store(this);

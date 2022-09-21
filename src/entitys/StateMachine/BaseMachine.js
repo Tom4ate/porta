@@ -1,9 +1,10 @@
 
 export default class StateMachine {
 
-    constructor() {
+    constructor(app) {
         // boot states
         // manage states and transactions
+        this.app = app;
         this.entity = null;
     }
 

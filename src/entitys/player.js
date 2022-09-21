@@ -9,7 +9,7 @@ export default class Player extends Entity {
             scale:0.05,
             moveable: true,
             animated: true,
-            stateMachine: new CharacterMachine(),
+            stateMachine: new CharacterMachine(app),
             rotation: new THREE.Euler(Math.PI / 2,Math.PI,0) ,
             // position: {},
         };
