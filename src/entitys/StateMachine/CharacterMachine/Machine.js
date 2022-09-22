@@ -7,6 +7,7 @@ import Turning from './States/Turning.js'
 
 export default class CharacterMachine extends BaseMachine {
 
+	lockMovement = false;
 	speedVector = new THREE.Vector3(0,0,0);
 	walkAceleretion = new THREE.Vector3(1, 0.25, 7.5);
 	runAceleretion = new THREE.Vector3(0,2,0);
@@ -17,10 +18,10 @@ export default class CharacterMachine extends BaseMachine {
 		super(app);
 		this.activeMoveState = new Idle(this);
 		this.moveStates = {
-			idle: this.activeMoveState,
-			walking: new Walking(this),
 			runing: new Runing(this),
+			walking: new Walking(this),
 			turning: new Turning(this),
+			idle: this.activeMoveState,
 		};
 		this.actionStates = {
 
@@ -51,7 +52,18 @@ export default class CharacterMachine extends BaseMachine {
 		speed.add(frameDecceleration);
 
 		// aplay the states
+		for (const key in this.moveStates) {
+			if (Object.hasOwnProperty.call(this.moveStates, key)) {
+				const state = this.moveStates[key];
 
+				if(state.verifyState(intents)) {
+					state.updateState(s,t,{ speed, rotation, intents });
+				} else {
+					state.leave(s,t);
+				}
+			}
+		}
+		
 		const forward = new THREE.Vector3(0, 0, 1);
 		forward.applyQuaternion(this.entity.quaternion); 
 		forward.normalize();

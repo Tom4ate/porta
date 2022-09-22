@@ -3,6 +3,7 @@ export default class State {
 
     animationName = "";
     animation = null;
+    active = false;
 
     constructor(machine) {
         this.machine = machine;
@@ -13,18 +14,33 @@ export default class State {
         // update player state
     }
 
+    verifyState() {}
+    update() {}
+
+    updateState(s,t,data) {
+        if(!this.active) {
+            this.enter();
+        }
+
+        this.update(s,t,data);
+    }
+
     // when the state start
-    onEnter(){
-        if (this.animation) {
+    enter(){
+        if (this.animation && !this.active) {
             this.animation.play();
         }
+
+        this.active = true;
     }
 
     // when the state stop
-    onLeave(){
-        if (this.animation) {
+    leave(){
+        if (this.animation && this.active) {
             this.animation.stop();
         }
+
+        this.active = false;
     }
 
     // when the state is in transition
