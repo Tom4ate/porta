@@ -12,7 +12,7 @@ export default class BaseMap extends Entity {
 
     load(app) {
         this.setupTerrain();
-        super.load(app);
+        return super.load(app);
     }
 
     setupTerrain() {

@@ -69,18 +69,20 @@ export default class App {
     }
 
     loadEntitys(){
-        var entitys = this.store.getEntitys();
-
-        console.log("entitys",entitys);
+        const entitys = this.store.getEntitys();
 
         for (let index = 0; index < entitys.length; index++) {
-            var entity = entitys[index];
+            const entity = entitys[index];
 
-            entity.load(this);
+            entity.load(this).then(() => {
+                // enable and track the entity
+                entity.loaded = true;
+                this.addEntity( entity );
 
-            if(this.devMode) {
-                entity.addToPanel(this);
-            }
+                if(this.devMode) {
+                    entity.addToPanel(this);
+                }
+            })
         }
 
     }

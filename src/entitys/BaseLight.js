@@ -9,7 +9,7 @@ export default class BaseLight extends Entity {
 
     load(app) {
         this.createLight();
-        super.load(app);
+        return super.load(app);
     }
 
     createLight() {

@@ -1,5 +1,9 @@
 import * as THREE from 'three';
 import BaseMachine from '../BaseMachine.js'
+import Idle from './States/Idle.js'
+import Walking from './States/Walking.js'
+import Runing from './States/Runing.js'
+import Turning from './States/Turning.js'
 
 export default class CharacterMachine extends BaseMachine {
 
@@ -9,10 +13,31 @@ export default class CharacterMachine extends BaseMachine {
 	decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
 	rotationSpeed = Math.PI / 40 ;
 
+	constructor(app) {
+		super(app);
+		this.activeMoveState = new Idle(this);
+		this.moveStates = {
+			idle: this.activeMoveState,
+			walking: new Walking(this),
+			runing: new Runing(this),
+			turning: new Turning(this),
+		};
+		this.actionStates = {
+
+		}
+	}
+
 	update(s,t) {
+		this.updateMovement(s,t);
+		this.updateActions(s,t);
+	    this.updateAnimation(s);
+	}
+
+	// aplay movements states
+	updateMovement(s,t) {
 		const intents = this.app.inputSystem.getIntents();
-		// aplay movements states
 		const speed = this.speedVector;
+        const rotation = this.entity.quaternion.clone();
 		// create decceleration
 		const frameDecceleration = new THREE.Vector3(
 		    speed.x * this.decceleration.x,
@@ -25,44 +50,7 @@ export default class CharacterMachine extends BaseMachine {
 		// aplay decceleration
 		speed.add(frameDecceleration);
 
-		let _Q = new THREE.Quaternion();
-		let _A = new THREE.Vector3();
-		let _R = this.entity.quaternion.clone();                    
-
-		let walkAceleretion = this.walkAceleretion;
-		let acc = walkAceleretion.clone();
-
-		// if (this._input._keys.shift) {
-		//     acc.multiplyScalar(2.0);
-		// }
-
-		// if (this._stateMachine._currentState.Name == 'dance') {
-		//     acc.multiplyScalar(0.0);
-		// }
-		
-		// quarternius corretion
-
-		if (intents.forward) {
-		    speed.z += acc.z * s;
-		}
-
-		if (intents.backward) {
-		    speed.z -= acc.z * s;
-		}
-
-		if (intents.left) {
-		    _A.set(0, 1, 0);
-		    _Q.setFromAxisAngle(_A, 4.0 * Math.PI * s * walkAceleretion.y);
-		    _R.multiply(_Q);
-		}
-
-		if (intents.right) {
-		    _A.set(0, 1, 0);
-		    _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * s * walkAceleretion.y);
-		    _R.multiply(_Q);
-		}
-
-		this.entity.quaternion.copy(_R);
+		// aplay the states
 
 		const forward = new THREE.Vector3(0, 0, 1);
 		forward.applyQuaternion(this.entity.quaternion); 
@@ -75,13 +63,12 @@ export default class CharacterMachine extends BaseMachine {
 		sideways.multiplyScalar(speed.y * s);
 		forward.multiplyScalar(speed.z * s);
 
+		this.entity.quaternion.copy(rotation);
 		this.entity.position.add(forward);
 		this.entity.position.add(sideways);
-
-		// aplay other interactions
-	    this.updateAnimation(deltaSeconds);
-
 	}
+
+	updateActions() {}
 
 	updateAnimation(deltaSeconds) {
 	    if(this.mixer) {

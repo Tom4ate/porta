@@ -12,6 +12,7 @@ import ObjectManager from '../modules/ObjectManager.js'
 
 export default class Entity {
     constructor (app, { name, loaderType, fileName, filePath, scale, actions, position, rotation, moveable, rotationSpeed, animated, animations, stateMachine }) {
+        this.loaded = false;
         this.app = app;
         this.name = name;
         this.mesh = null;
@@ -33,42 +34,45 @@ export default class Entity {
     }
 
     load(app) {
+        return new Promise((resolve,reject) => {
 
-        // attach the state machine to the entity
-        if (this.stateMachine) {
-            this.stateMachine.entangleEntity(this);
-        }
+            // attach the state machine to the entity
+            if (this.stateMachine) {
+                this.stateMachine.entangleEntity(this);
+            }
 
-        // load animations and meshes
-        if(this.loaderType && this.fileName) {
-            const loader = new ObjectManager(app); 
-            loader.loadFile(
-                this.loaderType,
-                this.filePath + '/' + this.fileName,
-                {
-                    scale: this.scale
-                },
-            ).then(
-                ({ quaternion, position, mesh }) => {
-                    console.log(mesh);
-                    this.quaternion = quaternion;
-                    this.position = position;
-                    this.mesh = mesh;
+            // load animations and meshes
+            if(this.loaderType && this.fileName) {
+                const loader = new ObjectManager(app); 
+                loader.loadFile(
+                    this.loaderType,
+                    this.filePath + '/' + this.fileName,
+                    {
+                        scale: this.scale
+                    },
+                ).then(
+                    ({ quaternion, position, mesh }) => {
+                        console.log(mesh);
+                        this.quaternion = quaternion;
+                        this.position = position;
+                        this.mesh = mesh;
 
-                    if(this.animated) {
-                        let { animations, mixer } = loader.loadAnimations(mesh)
-                        this.mixer = mixer;
-                        this.animations = animations;
+                        if(this.animated) {
+                            let { animations, mixer } = loader.loadAnimations(mesh)
+                            this.mixer = mixer;
+                            this.animations = animations;
+                        }
+
+                        if (this.stateMachine) {
+                            this.stateMachine.entangleActions();
+                        }
+                        resolve(this);
                     }
-
-                    if (this.stateMachine) {
-                        this.stateMachine.entangleActions();
-                    }
-                }
-            );
-        }
-
-        app.addEntity( this );
+                );
+            } else {
+                resolve(this);
+            }
+        });
     }
 
     addToPanel(app) {
