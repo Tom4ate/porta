@@ -8,7 +8,27 @@ export default class StateMachine {
         this.entity = null;
     }
 
-    entangleActions() {}
+    entangleActions() {
+        const animations = this.entity.animations;
+        const states = Object.values(this.states);
+
+        for (var i = 0; i < states.length; i++) {
+            let state = states[i];
+            let stateAnimations = animations.filter((animation) => {
+                // console.log("animation._clip.name",animation._clip.name);
+                return state.verifyAnimationName(animation._clip.name);
+            })
+
+            if (stateAnimations) {
+                state.entangleAnimation(stateAnimations);
+            }
+        }
+
+        // entangle mixer
+        if (this.entity) {
+            this.mixer = this.entity.mixer;
+        }
+    }
     
     entangleEntity(entity) {
         this.entity = entity;

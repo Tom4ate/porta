@@ -1,8 +1,34 @@
 import State from './BaseState';
 
 export default class WalkingState extends State {
+
+    animationFowardName = "Character|walking";
+    animationBackwardName = "Character|left turn 90";
+    animationFoward = null;
+    animationBackward = null;
+    animationFowardPlaying = false;
+    animationBackwardPlaying = false;
+
     constructor(machine) {
         super(machine);
+    }
+
+    verifyAnimationName(animationName) {
+        return this.animationFowardName === animationName ||  this.animationBackwardName === animationName;
+    }
+
+    entangleAnimation(animations) {
+        for (var i = 0; i < animations.length; i++) {
+            let animation = animations[i];
+
+            if (this.animationBackwardName === animation._clip.name) {
+                this.animationBackward = animation;
+            }
+
+            if (this.animationFowardName === animation._clip.name) {
+                this.animationFoward = animation;
+            }
+        }
     }
 
     verifyState(intents) {
@@ -29,11 +55,46 @@ export default class WalkingState extends State {
         }
     }
 
-    fowardAnimation() {
-        // activate ani
+    leave() {
+        if (this.active) {
+            this.fowardAnimation(false);
+            this.backwardAnimation(false);
+        }
+
+        this.active = false;
     }
 
-    backwardAnimation() {
+    fowardAnimation(on) {
+        // activate respective animation
+        if (this.animationFoward) {
+            if (on && !this.animationFowardPlaying) {
+                console.log("animationFoward.play");
+                this.animationFowardPlaying = true;
+                this.animationFoward.play();
+            } 
 
+            if (!on && this.animationFowardPlaying) {
+                console.log("animationFoward.stop");
+                this.animationFowardPlaying = false;
+                this.animationFoward.stop();
+            }
+        }
+    }
+
+    backwardAnimation(on) {
+        // activate respective animation
+        if (this.animationBackward) {
+            if (on && !this.animationBackwardPlaying) {
+                console.log("animationBackward.play");
+                this.animationBackwardPlaying = true;
+                this.animationBackward.play();
+            } 
+
+            if (!on && this.animationBackwardPlaying) {
+                console.log("animationBackward.stop");
+                this.animationBackwardPlaying = false;
+                this.animationBackward.stop();
+            }
+        }
     }
 }

@@ -88,4 +88,11 @@ export default class CharacterMachine extends BaseMachine {
 	    }
 	}
 
+	get states() {
+		return {
+			...this.moveStates,
+			...this.actionStates,
+		}
+	}
+
 }

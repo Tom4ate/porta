@@ -52,7 +52,6 @@ export default class Entity {
                     },
                 ).then(
                     ({ quaternion, position, mesh }) => {
-                        console.log(mesh);
                         this.quaternion = quaternion;
                         this.position = position;
                         this.mesh = mesh;

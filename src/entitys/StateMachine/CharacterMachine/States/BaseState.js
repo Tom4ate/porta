@@ -14,6 +14,14 @@ export default class State {
         // update player state
     }
 
+    verifyAnimationName(animationName) {
+        return this.animationName === animationName;
+    }
+
+    entangleAnimation([animation]) {
+        this.animation = animation;
+    }
+
     verifyState() {}
     update() {}
 
@@ -27,6 +35,7 @@ export default class State {
 
     // when the state start
     enter(){
+        console.log("enter");
         if (this.animation && !this.active) {
             this.animation.play();
         }
