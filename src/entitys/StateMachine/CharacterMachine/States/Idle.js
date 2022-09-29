@@ -11,12 +11,14 @@ export default class IdleState extends State {
     }
 
     verifyState(intents) {
-        return !(
+        let anyPress = (
             intents.foward ||
             intents.backward || 
             intents.right || 
             intents.left || 
             intents.jump
         )
+        
+        return !anyPress || ( intents.foward && intents.backward && !intents.fast) || ( intents.right && intents.left);
     }
 }

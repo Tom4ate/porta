@@ -14,7 +14,8 @@ export default class WalkingState extends State {
     }
 
     verifyAnimationName(animationName) {
-        return this.animationFowardName === animationName ||  this.animationBackwardName === animationName;
+        return false;
+        // return this.animationFowardName === animationName ||  this.animationBackwardName === animationName;
     }
 
     entangleAnimation(animations) {
@@ -68,13 +69,11 @@ export default class WalkingState extends State {
         // activate respective animation
         if (this.animationFoward) {
             if (on && !this.animationFowardPlaying) {
-                console.log("animationFoward.play");
                 this.animationFowardPlaying = true;
                 this.animationFoward.play();
             } 
 
             if (!on && this.animationFowardPlaying) {
-                console.log("animationFoward.stop");
                 this.animationFowardPlaying = false;
                 this.animationFoward.stop();
             }
@@ -85,13 +84,11 @@ export default class WalkingState extends State {
         // activate respective animation
         if (this.animationBackward) {
             if (on && !this.animationBackwardPlaying) {
-                console.log("animationBackward.play");
                 this.animationBackwardPlaying = true;
                 this.animationBackward.play();
             } 
 
             if (!on && this.animationBackwardPlaying) {
-                console.log("animationBackward.stop");
                 this.animationBackwardPlaying = false;
                 this.animationBackward.stop();
             }

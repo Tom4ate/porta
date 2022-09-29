@@ -19,16 +19,20 @@ export default class inputSystem {
     // load and configured by device and user
     keyMap = [
     {
-        key: "w",
+        // key: "w",
+        keyCode: 87,
         toggle: "foward"
     },{
-        key: "s",
+        // key: "s",
+        keyCode: 83,
         toggle: "backward"
     },{
-        key: "a",
+        // key: "a",
+        keyCode: 65,
         toggle: "left"
     },{
-        key: "d",
+        // key: "d",
+        keyCode: 68,
         toggle: "right"
     },{
         keyCode: 32, // space
@@ -70,6 +74,8 @@ export default class inputSystem {
 
     _hendleEvent(type,event) {
         const on = type === "keydown" || type === "keypress";
+
+        console.log("type,event",type,event);
 
         for (let index = 0; index < this.keyMap.length; index++) {
             const item = this.keyMap[index];
