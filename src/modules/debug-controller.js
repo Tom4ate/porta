@@ -20,6 +20,10 @@ export default class DebugController {
         return _next_id++;
     }
 
+    get panel() {
+        return this.baseInspector ? this.baseInspector.settings : null;
+    }
+
     createPanel() {
         let options = {
             // ...config,

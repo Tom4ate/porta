@@ -75,7 +75,7 @@ export default class inputSystem {
     _hendleEvent(type,event) {
         const on = type === "keydown" || type === "keypress";
 
-        console.log("type,event",type,event);
+        // console.log("type,event",type,event);
 
         for (let index = 0; index < this.keyMap.length; index++) {
             const item = this.keyMap[index];

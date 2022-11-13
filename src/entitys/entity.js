@@ -11,8 +11,26 @@ import * as THREE from 'three';
 import ObjectManager from '../modules/ObjectManager.js'
 
 export default class Entity {
-    constructor (app, { name, loaderType, fileName, filePath, scale, actions, position, rotation, moveable, rotationSpeed, animated, animations, stateMachine }) {
+    constructor (
+        app,
+        { 
+            name, 
+            loaderType, 
+            fileName, 
+            filePath, 
+            scale, 
+            actions, 
+            position, 
+            rotation, 
+            moveable, 
+            rotationSpeed, 
+            animated, 
+            animations, 
+            stateMachine 
+        }
+    ) {
         this.loaded = false;
+        this.hasPanel = false;
         this.app = app;
         this.name = name;
         this.mesh = null;
@@ -75,15 +93,21 @@ export default class Entity {
     }
 
     addToPanel(app) {
-        let panelConfig = this.getPanelConfig();
-        app.DebugController.addEntity({ entity: this, panelConfig });
+        if(this.hasPanel) {
+            let folder = app.DebugController.addEntity({ entity: this, panelConfig });
+            // let panelConfig = this.createPanel(folder);
+            this.createPanel(folder);
+        }
     }
 
-    getPanelConfig() {
-        return {
-            transform: true
-        };
-    }
+    // this is for debug panel debugPanelControll
+    // createPanel() {
+        // return null;
+        // exemples 
+        // return {
+            // transform: true
+        // };
+    // }
 
     addToScene( item ) {
         this.app.scene.add( item );

@@ -3,7 +3,7 @@ import State from './BaseState';
 export default class WalkingState extends State {
 
     animationFowardName = "Character|walking";
-    animationBackwardName = "Character|left turn 90";
+    animationBackwardName = "Character|t-pose";
     animationFoward = null;
     animationBackward = null;
     animationFowardPlaying = false;
@@ -14,8 +14,8 @@ export default class WalkingState extends State {
     }
 
     verifyAnimationName(animationName) {
-        return false;
-        // return this.animationFowardName === animationName ||  this.animationBackwardName === animationName;
+        // return false;
+        return this.animationFowardName === animationName ||  this.animationBackwardName === animationName;
     }
 
     entangleAnimation(animations) {

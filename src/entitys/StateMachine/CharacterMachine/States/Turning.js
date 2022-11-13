@@ -17,9 +17,8 @@ export default class TurningState extends State {
     }
     
     verifyAnimationName(animationName) {
-        console.log("anima  ",animationName);
-        return false;
-        // return this.animationRightName === animationName ||  this.animationLeftName === animationName;
+        // return false;
+        return this.animationRightName === animationName ||  this.animationLeftName === animationName;
     }
 
     entangleAnimation(animations) {
