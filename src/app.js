@@ -57,8 +57,8 @@ export default class App {
 
     startInitialCamera() {
         let cameraControl = new CameraController( this );
-        cameraControl.setMode("orbit");
-        // cameraControl.setMode("playerFollow");
+        // cameraControl.setMode("orbit");
+        cameraControl.setMode("playerFollow");
         cameraControl.setPosition(0,20,30);
 
         this.cameraControl = cameraControl;

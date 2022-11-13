@@ -48,12 +48,14 @@ export default class DebugController {
     }
 
     addEntity({ entity, panelConfig }) {
-        let entityName = entity.name;
-        let folder = this.entityFolder.addFolder( entityName );
-        
+        let folder = this.entityFolder.addFolder( entity.name );
+
+        // entengle simple configs to panel
         for (let name in panelConfig) {
             folder.add(panelConfig,name);
         }
+
+        return folder;
     }
 
     showStatus() {

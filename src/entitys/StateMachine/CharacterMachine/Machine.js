@@ -32,6 +32,14 @@ export default class CharacterMachine extends BaseMachine {
 		this.updateMovement(s,t);
 		this.updateActions(s,t);
 	    this.updateAnimation(s);
+	    if (this.app.devMode && this.entity.stateMachinePanel) {
+	    	this.entity.stateMachinePanel.updateStates()
+	    }
+	}
+
+	get speed() {
+		let { x, y, z } = this.speedVector;
+		return x + y + z;
 	}
 
 	// aplay movements states
@@ -56,11 +64,13 @@ export default class CharacterMachine extends BaseMachine {
 			if (Object.hasOwnProperty.call(this.moveStates, key)) {
 				const state = this.moveStates[key];
 
-				if(state.verifyState(intents)) {
-					state.updateState(s,t,{ speed, rotation, intents });
-				} else {
-					state.leave(s,t);
-				}
+				state.updateState(s,t,state.verifyState(intents),{ speed, rotation, intents });
+
+				// if(state.verifyState(intents)) {
+				// 	state.updateState(s,t,{ speed, rotation, intents });
+				// } else {
+				// 	state.leave(s,t);
+				// }
 			}
 		}
 		

@@ -12,60 +12,75 @@ export default class Player extends Entity {
             hasPanel: true,
             stateMachine: new CharacterMachine(app),
             rotation: new THREE.Euler(Math.PI / 2,Math.PI,0) ,
+            panelConfig: null,
+            stateMachinePanel: null,
             // position: {},
         };
 
         return super(app,baseObject);            
     }
 
-    // Debug panel config
-    createPanel(foler) {
-        console.log("folder",folder);
-        // let playerFolder = folder.addFolder("");
-        let positionFolder = folder.addFolder("Position and direction");
-
-        let Ox = this.idealOffset.x;
-        let Oy = this.idealOffset.y;
-        let Oz = this.idealOffset.z;
-        let Lx = this.idealLookat.x;
-        let Ly = this.idealLookat.y;
-        let Lz = this.idealLookat.z;
-        
-        console.log("this.speed",this.speed)
-
-        let settings = {
-            "speed" : this.speed,
-            // "offset step y" : Oy,
-            // "offset step z" : Oz,
-            // "lookat step x" : Lx,
-            // "lookat step y" : Ly,
-            // "lookat step z" : Lz,
+    getPanelConfig() {
+        this.panelConfig = {
+            // "locate" : () => {
+            //     console.log("locate")
+            // }
         }
-
-        let max = this.speed * 2;
-        let min = 0.001;
-        let step = 0.001;
-
-        positionFolder
-        .add( settings, "speed",min,max, step)
-        .onChange((value) => {
-            console.log("value",value);
-            // this.speed = value;
-        });
-
-        return {
-            "player settings": () => {
-                console.log("Ações do player",this);
-            },
-        };
+        
+        return this.panelConfig;
     }
 
-    
-    // default animations
-    // getAnimations() {}
+    // Debug panel config
+    createPanel(folder) {
+        folder.open();
 
-    // default action
-    // getActions() {}
-    
+        // state machine debug config
+        this.stateMachinePanel = {
+            states: [],
+            stateMachine: this.stateMachine,
+
+            updateStates() {
+                for (let i = 0; i < this.states.length; i++) {
+                    let state = this.states[i];
+                    let stateClass = this[state + "_class"];
+                    let controller = this[state + "_controller"];
+                    let controllerWeight = this[state + "_controller_weight"];
+
+                    if (stateClass) {
+                        if (controller) {
+                            controller.setValue(stateClass.active);
+                        }
+                        if (controllerWeight) {
+                            controllerWeight.setValue(stateClass.animationWeight);
+                        }
+                    }
+                }
+            }
+        }
+
+        // create the state machine folder
+        let stateMachineFolder = folder.addFolder("State Machine");
+        stateMachineFolder.open();
+
+        // entengle the states to the folder
+        for(let state in this.stateMachine.moveStates) {
+            this.stateMachinePanel[state] = false;
+            this.stateMachinePanel[state+" Weight"] = 0;
+
+            let controller = stateMachineFolder
+            .add( this.stateMachinePanel , state);
+
+            let controllerWeight = stateMachineFolder
+            .add( this.stateMachinePanel , state+" Weight", 0, 1, 0.01);
+
+            this.stateMachinePanel[state + "_controller"] = controller;
+            this.stateMachinePanel[state + "_controller_weight"] = controllerWeight;
+            this.stateMachinePanel[state + "_class"] = this.stateMachine.moveStates[state];
+            this.stateMachinePanel.states.push(state);
+        }
+
+        return this.stateMachinePanel;
+    }
+
 }
 

@@ -1,9 +1,14 @@
 
 export default class State {
 
-    animationName = "";
-    animation = null;
+    // states controll
     active = false;
+
+    // animations controll
+    animation = null;
+    animationName = "";
+    animationWeight = 0;
+    animationTransit = 0.1;
 
     constructor(machine) {
         this.machine = machine;
@@ -25,9 +30,21 @@ export default class State {
     verifyState() {}
     update() {}
 
-    updateState(s,t,data) {
-        if(!this.active) {
+    updateState(s,t,activate,data) {
+        if (!this.active && activate) {
             this.enter();
+        }
+
+        if (this.active && !activate) {
+            this.leave();
+        }
+
+        if (this.active && this.animationWeight < 1) {
+            this.animationWeight += this.animationTransit;
+        }
+
+        if (!this.active && this.animationWeight > 0) {
+            this.animationWeight -= this.animationTransit;
         }
 
         this.update(s,t,data);

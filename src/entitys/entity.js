@@ -15,6 +15,7 @@ export default class Entity {
         app,
         { 
             name, 
+            hasPanel = false, 
             loaderType, 
             fileName, 
             filePath, 
@@ -29,10 +30,10 @@ export default class Entity {
             stateMachine 
         }
     ) {
-        this.loaded = false;
-        this.hasPanel = false;
-        this.app = app;
         this.name = name;
+        this.app = app;
+        this.loaded = false;
+        this.hasPanel = hasPanel;
         this.mesh = null;
         this.loaderType = loaderType;
         this.fileName = fileName;
@@ -93,7 +94,9 @@ export default class Entity {
     }
 
     addToPanel(app) {
+        // console.log("entity add",this.name,this.hasPanel);
         if(this.hasPanel) {
+            let panelConfig = this.getPanelConfig();
             let folder = app.DebugController.addEntity({ entity: this, panelConfig });
             // let panelConfig = this.createPanel(folder);
             this.createPanel(folder);
@@ -104,9 +107,14 @@ export default class Entity {
     // createPanel() {
         // return null;
         // exemples 
-        // return {
-            // transform: true
-        // };
+        // return {};
+    // }
+
+    // getPanelConfig() {
+        // this.panelConfig = {
+        // }
+        // 
+        // return this.panelConfig;
     // }
 
     addToScene( item ) {
