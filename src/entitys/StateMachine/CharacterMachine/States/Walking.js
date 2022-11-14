@@ -68,6 +68,7 @@ export default class WalkingState extends State {
     fowardAnimation(on) {
         // activate respective animation
         if (this.animationFoward) {
+            
             if (on && !this.animationFowardPlaying) {
                 this.animationFowardPlaying = true;
                 this.animationFoward.play();

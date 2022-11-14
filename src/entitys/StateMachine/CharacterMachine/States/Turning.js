@@ -27,10 +27,12 @@ export default class TurningState extends State {
 
             if (this.animationLeftName === animation._clip.name) {
                 this.animationLeft = animation;
+                animation.setLoop(THREE.LoopPingPong);
             }
-
+            
             if (this.animationRightName === animation._clip.name) {
                 this.animationRight = animation;
+                animation.setLoop(THREE.LoopPingPong);
             }
         }
     }

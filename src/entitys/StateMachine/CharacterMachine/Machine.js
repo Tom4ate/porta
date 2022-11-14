@@ -9,7 +9,7 @@ export default class CharacterMachine extends BaseMachine {
 
 	lockMovement = false;
 	speedVector = new THREE.Vector3(0,0,0);
-	walkAceleretion = new THREE.Vector3(1, 0.25, 7.5);
+	walkAceleretion = new THREE.Vector3(1, 0.25, 20);
 	runAceleretion = new THREE.Vector3(0,2,0);
 	decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
 	rotationSpeed = Math.PI / 40 ;

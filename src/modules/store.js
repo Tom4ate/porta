@@ -4,6 +4,7 @@ import BaseLight from '../entitys/BaseLight';
 import BaseMap from '../entitys/BaseMap';
 import playerData from '../database/player';
 import mapsData from '../database/maps';
+import treesData from '../database/trees';
 import lightsData from '../database/lights';
 import * as THREE from 'three';
 
@@ -20,7 +21,8 @@ export default class Store {
         this.entitys = this.loadDatabase(app,{
             player: playerData,
             maps: mapsData,
-            lights: lightsData
+            lights: lightsData,
+            trees: treesData,
         });
     }
 

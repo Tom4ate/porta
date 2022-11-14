@@ -3,6 +3,7 @@ import State from './BaseState';
 export default class IdleState extends State {
 
     animationName = "Character|idle";
+    animationTransit = 1;
 
     constructor(machine) {
         super(machine);

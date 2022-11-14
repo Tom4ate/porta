@@ -47,6 +47,10 @@ export default class State {
             this.animationWeight -= this.animationTransit;
         }
 
+        if(this.animation && this.animationWeight) {
+            this.animation.setEffectiveWeight(this.animationWeight);
+        }
+
         this.update(s,t,data);
     }
 
